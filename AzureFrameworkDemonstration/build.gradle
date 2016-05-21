@@ -32,7 +32,8 @@ dependencies {
     compile 'com-microsoft-azure:azure-oidc:1.0.0'
     compile 'javax:javaee-api:6.0'
 	compile 'org.springframework:spring-tx:4.2.6.RELEASE'
-    compile 'com-microsoft-azure:azure-framework-domain:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-domainservice:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-commandprocessor:1.0.0'
 
     testCompile 'junit:junit:4.12'
 }
