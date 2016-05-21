@@ -14,7 +14,7 @@
 	<context:component-scan base-package="com.microsoft.azure.framework,com.microsoft.azure.demo" />
 
 	<jee:jndi-lookup id="myEmf"
-		jndi-name="java:jboss/persistence/event-store-factory" />
+		jndi-name="java:jboss/persistence/event-store-unit-factory" />
 
 	<bean id="myTxManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="myEmf" />
