@@ -10,6 +10,7 @@ This framework uses:
 * Command Query Responsibility Segregation (CQRS)
 * Declarative Preconditions
 * Eventual Consistency
+* Always Valid Objects
 * Factory Pattern
 * Builder Pattern
 * Single Responsibility Principle (SRP)
