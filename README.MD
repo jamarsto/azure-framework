@@ -12,8 +12,11 @@ This framework uses:
 * Eventual Consistency
 * Factory Pattern
 * Builder Pattern
-* Interface Segregation Pattern (ISP)
-* Dependency Inversion
+* Single Responsibility Principle (SRP)
+* Open Closed Principle (OCP)
+* Liskov Substituion Principle (LSP)
+* Interface Segregation Principle (ISP)
+* Dependency Inversion Principle (DIP)
 * Reflection
 * Spring
 * Dependency Injection on Aggregate and Entity Beans
