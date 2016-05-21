@@ -40,7 +40,7 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 				+ "AND e.version >= :fromVersion AND e.version <= toVersion " 
 				+ "ORDER BY e.version ASC") })
 @Entity(name = "EVENT_STORE_ENTRY")
-public final class EventStoreEntry {
+public class EventStoreEntry {
 	
 	public static final class Builder {
 		private String bucketID;
