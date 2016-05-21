@@ -19,7 +19,7 @@ import com.microsoft.azure.framework.eventstore.persistence.EventStoreEntry;
 @Component
 public final class SimpleEventStoreDAO implements EventStoreDAO {
 
-	@PersistenceContext(unitName = "event-store-unit")
+	@PersistenceContext(unitName = "persistence/event-store-unit")
 	private EntityManager entityManager;
 
 	@SuppressWarnings("unchecked")
