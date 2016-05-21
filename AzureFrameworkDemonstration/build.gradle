@@ -32,6 +32,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile 'javax:javaee-api:6.0'
     compile 'com-microsoft-azure:azure-framework-domain:1.0.0'
+    compile 'com-microsoft-azure:azure-oidc:1.0.0'
 
     testCompile 'junit:junit:4.12'
 }
