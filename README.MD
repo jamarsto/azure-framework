@@ -10,3 +10,9 @@ This framework uses:
 * Command Query Responsibility Segregation (CQRS)
 * Declarative Preconditions
 * Eventual Consistency
+* Factory Pattern
+* Builder Pattern
+* Reflection
+* Spring
+* Dependency Injection on Aggregate and Entity Beans
+* JPA
