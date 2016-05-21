@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.microsoft.azure.framework.precondition.PreconditionService;
@@ -48,13 +49,10 @@ public class EventStoreEntry {
 		private String event;
 		private String eventClassName;
 		private String partitionID;
-		private final PreconditionService precondition;
+		@Autowired
+		private PreconditionService precondition;
 		private UUID streamID;
 		private Long version;
-		
-		private Builder(final PreconditionService precondition) {
-			this.precondition = precondition;
-		}
 
 		public EventStoreEntry build() {
 			precondition.requiresNotEmpty("Partition ID is required.", partitionID);
@@ -128,10 +126,12 @@ public class EventStoreEntry {
 	@Component
 	public static final class BuilderFactory {
 		@Autowired
-		private PreconditionService precondition;
+		private AutowireCapableBeanFactory autowireBeanFactory;
 
 		public Builder create() {
-			return new Builder(precondition);
+			final Builder builder = new Builder();
+			autowireBeanFactory.autowireBean(builder);
+			return builder;
 		}
 	}
 
