@@ -11,6 +11,8 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 version = '1.0.0'
 
+project.ext.deployDir = 'C:\\GIT\\WildflyAzure\\wildfly-10.0.0.Final\\standalone\\deployments'
+
 install {
     repositories.mavenInstaller {
         pom.groupId = 'com-microsoft-azure'
@@ -29,4 +31,13 @@ dependencies {
     compile 'com-microsoft-azure:azure-framework-domain:1.0.0'
 
     testCompile 'junit:junit:4.12'
+}
+
+task deploylocal() << {
+    copy{
+        from "${buildDir}\\libs"
+        into "${deployDir}"
+        include '*.war'
+    }
+    ant.touch(file:"${deployDir}\\" + rootProject.name + "-" + version + ".war.dodeploy")
 }
