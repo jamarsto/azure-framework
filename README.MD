@@ -12,6 +12,8 @@ This framework uses:
 * Eventual Consistency
 * Factory Pattern
 * Builder Pattern
+* Interface Segregation Pattern (ISP)
+* Dependency Inversion
 * Reflection
 * Spring
 * Dependency Injection on Aggregate and Entity Beans
