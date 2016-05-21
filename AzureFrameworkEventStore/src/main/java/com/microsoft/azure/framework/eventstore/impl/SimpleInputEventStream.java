@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.microsoft.azure.framework.eventstore.InputEventStream;
@@ -22,15 +23,12 @@ public final class SimpleInputEventStream implements InputEventStream {
 		private Class<?> filter = Serializable.class;
 		private Long fromVersion = 0L;
 		private String partitionID;
-		private final PreconditionService preconditionService;
-		private final EventSetRepository eventSetRepository;
+		@Autowired
+		private PreconditionService preconditionService;
+		@Autowired
+		private EventSetRepository eventSetRepository;
 		private UUID streamID;
 		private Long toVersion = Long.MAX_VALUE;
-
-		private Builder(final EventSetRepository eventSetRepository, PreconditionService preconditionService) {
-			this.eventSetRepository = eventSetRepository;
-			this.preconditionService = preconditionService;
-		}
 
 		@Override
 		public InputEventStream build() throws IOException {
@@ -126,13 +124,13 @@ public final class SimpleInputEventStream implements InputEventStream {
 	@Component
 	public static final class BuilderFactory implements InputEventStream.BuilderFactory {
 		@Autowired
-		private PreconditionService preconditionService;
-		@Autowired
-		private EventSetRepository eventSetRepository;
+		private AutowireCapableBeanFactory autowireBeanFactory;
 
 		@Override
 		public Builder create() {
-			return new Builder(eventSetRepository, preconditionService);
+			final Builder builder = new Builder();
+			autowireBeanFactory.autowireBean(builder);
+			return builder;
 		}
 	}
 

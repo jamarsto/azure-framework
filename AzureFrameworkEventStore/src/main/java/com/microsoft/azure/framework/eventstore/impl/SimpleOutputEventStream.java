@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
@@ -21,19 +22,15 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 
 	public static final class Builder implements OutputEventStream.Builder {
 		private String bucketID;
-		private final EventSet.BuilderFactory eventSetBuilderFactory;
-		private final EventSetRepository eventSetRepository;
+		@Autowired
+		private EventSet.BuilderFactory eventSetBuilderFactory;
+		@Autowired
+		private EventSetRepository eventSetRepository;
 		private Long fromVersion = 0L;
 		private String partitionID;
-		private final PreconditionService preconditionService;
+		@Autowired
+		private PreconditionService preconditionService;
 		private UUID streamID;
-
-		private Builder(final PreconditionService preconditionService, final EventSetRepository eventSetRepository,
-				final EventSet.BuilderFactory eventSetBuilderFactory) {
-			this.preconditionService = preconditionService;
-			this.eventSetRepository = eventSetRepository;
-			this.eventSetBuilderFactory = eventSetBuilderFactory;
-		}
 
 		@Override
 		public OutputEventStream build() {
@@ -85,15 +82,13 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 	@Component
 	public static final class BuilderFactory implements OutputEventStream.BuilderFactory {
 		@Autowired
-		private EventSet.BuilderFactory eventSetBuilderFactory;
-		@Autowired
-		private EventSetRepository eventSetRepository;
-		@Autowired
-		private PreconditionService preconditionService;
+		private AutowireCapableBeanFactory autowireBeanFactory;
 
 		@Override
 		public Builder create() {
-			return new Builder(preconditionService, eventSetRepository, eventSetBuilderFactory);
+			final Builder builder = new Builder();
+			autowireBeanFactory.autowireBean(builder);
+			return builder;
 		}
 	}
 
