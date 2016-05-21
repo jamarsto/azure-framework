@@ -22,7 +22,7 @@
 
 	<tx:annotation-driven transaction-manager="txManager" />
 
-	<bean id="domainServiceConfiguration">
+	<bean id="domainServiceConfiguration" class="com.microsoft.azure.framework.domain.service.impl.SimpleDomainServiceConfiguration">
 		<property name="partitionID" value="banking"/>
 		<property name="routingMap">
 			<map>
@@ -38,7 +38,7 @@
 		</property>
 	</bean>
 
-	<bean id="commandProcessorConfiguration">
+	<bean id="commandProcessorConfiguration" class="com.microsoft.azure.framework.command.processor.configuration.impl.SimpleCommandProcessorConfiguration">
 		<property name="routingMap">
 			<map>
 				<entry key="DEFAULT_DOMAIN_SERVICE" value-ref="defaultDomainService" />
