@@ -90,7 +90,7 @@ public abstract class AbstractAggregate implements Aggregate {
 		try {
 			final List<Event> events = (List<Event>) this.getClass().getMethod("decide", command.getClass())
 					.invoke(this, command);
-			if (version - lastSnapshot + events.size() > snapshotInterval) {
+			if (!events.isEmpty() && version - lastSnapshot + events.size() + 1 >= snapshotInterval) {
 				events.add(snapshot());
 			}
 			return events;
