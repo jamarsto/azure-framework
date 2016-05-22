@@ -15,6 +15,8 @@ public interface Aggregate {
 	Boolean compensate(List<Event> events);
 
 	List<Event> decide(Command command);
+	
+	List<Event> getEvents();
 
 	UUID getID();
 

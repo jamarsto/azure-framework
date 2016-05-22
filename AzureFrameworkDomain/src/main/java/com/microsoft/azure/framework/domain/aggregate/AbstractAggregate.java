@@ -33,6 +33,8 @@ public abstract class AbstractAggregate implements Aggregate {
 
 	@Override
 	public final Boolean apply(final List<Event> events) {
+		Long count = 0L;
+		Long offset = 0L;
 		try {
 			if (lastSnapshot == 0L && !events.isEmpty() && !(events.get(0) instanceof SnapshotEvent)) {
 				LOGGER.warn("lastSnapshot is zero and the first event is not a SnaphotEvent");
@@ -40,6 +42,7 @@ public abstract class AbstractAggregate implements Aggregate {
 			}
 			Long localVersion = version;
 			for (final Serializable event : events) {
+				count++;
 				localVersion++;
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
 						event);
@@ -48,6 +51,7 @@ public abstract class AbstractAggregate implements Aggregate {
 				}
 				if (event instanceof SnapshotEvent) {
 					lastSnapshot = localVersion;
+					offset = count;
 				}
 			}
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
@@ -55,6 +59,9 @@ public abstract class AbstractAggregate implements Aggregate {
 			throw new AggregateException(e.getMessage(), e);
 		}
 		this.events.addAll(events);
+		if (version > 1L && !events.isEmpty() && version - lastSnapshot + events.size() - offset + 1 >= snapshotInterval) {
+			this.events.add(snapshot());
+		}
 		return Boolean.TRUE;
 	}
 
@@ -90,14 +97,16 @@ public abstract class AbstractAggregate implements Aggregate {
 		try {
 			final List<Event> events = (List<Event>) this.getClass().getMethod("decide", command.getClass())
 					.invoke(this, command);
-			if (!events.isEmpty() && version - lastSnapshot + events.size() + 1 >= snapshotInterval) {
-				events.add(snapshot());
-			}
 			return events;
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public final List<Event> getEvents() {
+		return Collections.unmodifiableList(events);
 	}
 
 	@Override

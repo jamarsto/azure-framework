@@ -71,9 +71,11 @@ public final class SimpleInputEventStream implements InputEventStream {
 
 		@Override
 		public Builder buildFilter(final Class<?> filter) {
-			preconditionService.requiresNotNull("Class to filter on is required.", filter);
-
-			this.filter = filter;
+			if (filter == null) {
+				this.filter = Serializable.class;
+			} else {
+				this.filter = filter;
+			}
 
 			return this;
 		}

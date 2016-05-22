@@ -45,8 +45,7 @@ public abstract class AbstractDomainService implements DomainService {
 		final InputEventStream.Builder inputEventStreamBuilder = domainServiceConfiguration
 				.getInputEventStreamBuilderFactory().create();
 		inputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
-				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateID())
-				.buildFilter(Serializable.class);
+				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateID());
 		final Class<?> clazz = domainServiceConfiguration.getSnapshotMap().get(aggregate.getClass().getName());
 		inputEventStreamBuilder.buildFilter(clazz).buildFromVersion(Long.MAX_VALUE);
 		try (final InputEventStream ies = inputEventStreamBuilder.build()) {
@@ -69,7 +68,7 @@ public abstract class AbstractDomainService implements DomainService {
 				.buildToVersion(Long.MAX_VALUE);
 		try (final InputEventStream ies = inputEventStreamBuilder.build()) {
 			if (ies.available() > 0) {
-				initialize(aggregate, ies);
+				initialize(aggregate, ies.getFromVersion() - 1L);
 				applyEvents("Aggregate failed to apply events from the event store.", aggregate,
 						(List<Event>) (List<?>) ies.readAll());
 				aggregate.commit();
@@ -90,11 +89,11 @@ public abstract class AbstractDomainService implements DomainService {
 		}
 	}
 
-	private void initialize(final Aggregate aggregate, final InputEventStream ies) {
+	private void initialize(final Aggregate aggregate, final Long fromVersion) {
 		try {
 			final Method method = AbstractAggregate.class.getDeclaredMethod("initialize", UUID.class, Long.class);
 			method.setAccessible(true);
-			method.invoke(aggregate, ies.getStreamID(), ies.getFromVersion() - 1L);
+			method.invoke(aggregate, aggregate.getID(), fromVersion);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new DomainServiceException(e.getMessage(), e);
@@ -102,14 +101,14 @@ public abstract class AbstractDomainService implements DomainService {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected final void populateStreamFromAggregate(final Aggregate aggregate, final List<Event> events) {
+	protected final void populateStreamFromAggregate(final Aggregate aggregate) {
 		final OutputEventStream.Builder outputEventStreamBuilder = domainServiceConfiguration
 				.getOutputEventStreamBuilderFactory().create();
 		outputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
 				.buildBucketID(aggregate.getClass().getName()).buildStreamID(aggregate.getID())
 				.buildFromVersion(aggregate.getVersion() + 1L);
 		try (final OutputEventStream oes = outputEventStreamBuilder.build()) {
-			oes.write((List<Serializable>) (List<?>) events);
+			oes.write((List<Serializable>) (List<?>) aggregate.getEvents());
 			oes.flush(UUID.randomUUID());
 		} catch (IOException e) {
 			throw new DomainServiceException(e.getMessage(), e);

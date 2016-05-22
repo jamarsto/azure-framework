@@ -48,6 +48,14 @@ public final class SimpleDepositFundsService implements DepositFundsService {
 		commandProcessor.doCommand(depositFunds);
 		commandProcessor.doCommand(depositFunds);
 		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
 	}
 
 	@Override

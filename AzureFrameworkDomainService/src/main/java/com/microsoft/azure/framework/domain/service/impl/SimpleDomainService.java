@@ -10,21 +10,21 @@ import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.service.AbstractDomainService;
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
 
-@Component(value="defaultDomainService")
+@Component(value = "defaultDomainService")
 public final class SimpleDomainService extends AbstractDomainService {
 
 	@Override
 	public void doCommand(final Command command) {
-		final Aggregate entity = getEmptyAggregate(command);
-		populateAggregateFromStream(command, entity);
-		final List<Event> events = entity.decide(command);
+		final Aggregate aggregate = getEmptyAggregate(command);
+		populateAggregateFromStream(command, aggregate);
+		final List<Event> events = aggregate.decide(command);
 		if (!events.isEmpty()) {
-			applyEvents("Entity failed to apply events.", entity, events);
+			applyEvents("Entity failed to apply events.", aggregate, events);
 		} else {
 			throw new DomainServiceException("Entity refused to apply events.");
 		}
-		populateStreamFromAggregate(entity, events);
+		populateStreamFromAggregate(aggregate);
 		// publish events here
-		entity.commit();
+		aggregate.commit();
 	}
 }

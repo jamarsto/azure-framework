@@ -16,12 +16,6 @@
 	<jee:jndi-lookup id="event-store-unit"
 		jndi-name="java:jboss/persistence/event-store-unit-factory" />
 
-<!-- 
-	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="event-store-unit" />
-	</bean>
--->
-
 	<bean id="txManager" class="org.springframework.transaction.jta.JtaTransactionManager" />
 
 	<tx:annotation-driven transaction-manager="txManager" />
@@ -39,7 +33,7 @@
 		<property name="snapshotMap">
 			<map>
 				<entry key="com.microsoft.azure.demo.impl.Account"
-					value-type="java.lang.Class" value="java.lang.String" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.CreatedAccount" />
 			</map>
 		</property>
 	</bean>
