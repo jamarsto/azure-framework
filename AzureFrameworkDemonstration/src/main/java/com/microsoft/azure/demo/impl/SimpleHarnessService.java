@@ -9,13 +9,15 @@ import org.springframework.stereotype.Controller;
 
 import com.microsoft.azure.demo.DepositFunds;
 import com.microsoft.azure.demo.HarnessService;
-import com.microsoft.azure.demo.internal.InternalDepositFunds;
+import com.microsoft.azure.framework.command.processor.CommandProcessor;
 
 @Controller("harnessService")
 @Scope("request")
 public final class SimpleHarnessService implements HarnessService {
 	@Autowired
 	private DepositFunds.BuilderFactory commandBuilderFactory;
+	@Autowired
+	private CommandProcessor commandProcessor;
 	private BigDecimal amount;
 
 	@Override
@@ -26,9 +28,7 @@ public final class SimpleHarnessService implements HarnessService {
 
 		final DepositFunds depositFunds = commandBuilder.build();
 
-		final InternalDepositFunds privateDepositFunds = (InternalDepositFunds) depositFunds;
-		System.out.println(privateDepositFunds.getAggregateID());
-		System.out.println(privateDepositFunds.getAmount());
+		commandProcessor.doCommand(depositFunds);
 	}
 
 	@Override
