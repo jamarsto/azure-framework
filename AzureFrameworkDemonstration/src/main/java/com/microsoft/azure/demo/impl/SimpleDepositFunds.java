@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.microsoft.azure.demo.DepositFunds;
-import com.microsoft.azure.demo.internal.InternalDepositFunds;
 import com.microsoft.azure.framework.command.AbstractCommand;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 
-public final class SimpleDepositFunds extends AbstractCommand implements InternalDepositFunds {
+public final class SimpleDepositFunds extends AbstractCommand implements DepositFunds {
 
 	public static final class Builder implements DepositFunds.Builder {
 		private BigDecimal amount;
@@ -62,12 +61,11 @@ public final class SimpleDepositFunds extends AbstractCommand implements Interna
 	}
 
 	@Override
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	@Override
 	public UUID getAggregateID() {
 		return id;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
 	}
 }

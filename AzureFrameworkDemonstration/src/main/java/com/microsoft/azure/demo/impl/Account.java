@@ -3,7 +3,6 @@ package com.microsoft.azure.demo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.microsoft.azure.demo.internal.InternalDepositFunds;
 import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.SnapshotEvent;
@@ -18,7 +17,7 @@ public final class Account extends AbstractAggregate {
 		return Boolean.TRUE;
 	}
 
-	public List<Event> decide(final InternalDepositFunds command) {
+	public List<Event> decide(final SimpleDepositFunds command) {
 		final List<Event> results = new ArrayList<Event>();
 		results.add(new DepositedFunds(command.getAmount()));
 		return results;
