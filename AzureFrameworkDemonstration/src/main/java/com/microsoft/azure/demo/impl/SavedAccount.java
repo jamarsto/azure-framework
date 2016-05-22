@@ -1,18 +1,25 @@
 package com.microsoft.azure.demo.impl;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 
 public class SavedAccount implements SnapshotEvent {
 	private static final long serialVersionUID = 1L;
-	private final List<Transaction> transactions;
+	private final UUID id;
+	private final BigDecimal balance;
 
-	public SavedAccount(final List<Transaction> transactions) {
-		this.transactions = transactions;
+	public SavedAccount(final UUID id, final BigDecimal balance) {
+		this.id = id;
+		this.balance = balance;
 	}
-	
-	public List<Transaction> getTransactions() {
-		return transactions;
+
+	public UUID getID() {
+		return id;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
 	}
 }

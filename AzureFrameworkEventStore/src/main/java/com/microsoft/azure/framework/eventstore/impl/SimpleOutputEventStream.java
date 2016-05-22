@@ -48,7 +48,7 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 
 			this.bucketID = bucketID;
 
-			return null;
+			return this;
 		}
 
 		@Override
@@ -66,7 +66,7 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 
 			this.partitionID = partitionID;
 
-			return null;
+			return this;
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 
 			this.streamID = streamID;
 
-			return null;
+			return this;
 		}
 	}
 

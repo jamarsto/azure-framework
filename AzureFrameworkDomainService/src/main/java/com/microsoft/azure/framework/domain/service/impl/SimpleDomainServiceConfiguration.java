@@ -9,7 +9,7 @@ import com.microsoft.azure.framework.domain.service.DomainServiceConfiguration;
 import com.microsoft.azure.framework.eventstore.InputEventStream;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
 
-@Component
+@Component("domainServiceConfiguration")
 public final class SimpleDomainServiceConfiguration implements DomainServiceConfiguration {
 	@Autowired
 	private InputEventStream.BuilderFactory inputEventStreamBuilderFactory;
