@@ -5,16 +5,15 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import com.microsoft.azure.demo.DepositFunds;
 import com.microsoft.azure.demo.HarnessService;
 import com.microsoft.azure.demo.internal.InternalDepositFunds;
 
-@Component
+@Controller("harnessService")
 @Scope("request")
 public final class SimpleHarnessService implements HarnessService {
-	private static final long serialVersionUID = 1L;
 	@Autowired
 	private DepositFunds.BuilderFactory commandBuilderFactory;
 	private BigDecimal amount;
