@@ -10,7 +10,7 @@ import com.microsoft.azure.demo.DepositFunds;
 import com.microsoft.azure.framework.command.AbstractCommand;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 
-public final class SimpleDepositFunds extends AbstractCommand implements DepositFunds {
+public final class DepositFundsCommand extends AbstractCommand implements DepositFunds {
 
 	public static final class Builder implements DepositFunds.Builder {
 		private BigDecimal amount;
@@ -23,7 +23,7 @@ public final class SimpleDepositFunds extends AbstractCommand implements Deposit
 			preconditionService.requiresNotNull("Account ID is required.", entityID);
 			preconditionService.requiresNotNull("Amount is required.", amount);
 
-			return new SimpleDepositFunds(this);
+			return new DepositFundsCommand(this);
 		}
 
 		@Override
@@ -48,14 +48,14 @@ public final class SimpleDepositFunds extends AbstractCommand implements Deposit
 			implements DepositFunds.BuilderFactory {
 		@Override
 		public Builder create() {
-			return inject(SimpleDepositFunds.Builder.class, new Builder());
+			return inject(DepositFundsCommand.Builder.class, new Builder());
 		}
 	}
 
 	private final BigDecimal amount;
 	private final UUID id;
 
-	private SimpleDepositFunds(final Builder builder) {
+	private DepositFundsCommand(final Builder builder) {
 		this.id = builder.entityID;
 		this.amount = builder.amount;
 	}

@@ -11,7 +11,7 @@ public final class Transaction extends AbstractEntity {
 	@SuppressWarnings("unused")
 	private BigDecimal amount;
 	
-	public List<Event> decide(final SimpleDepositFunds command) {
+	public List<Event> decide(final DepositFundsCommand command) {
 		final List<Event> results = new ArrayList<Event>();
 		results.add(new DepositedFunds(command.getAmount()));
 		return results;
