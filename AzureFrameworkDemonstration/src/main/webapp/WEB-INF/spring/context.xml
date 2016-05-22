@@ -21,6 +21,7 @@
 		<property name="entityManagerFactory" ref="event-store-unit" />
 	</bean>
 -->
+
 	<bean id="txManager" class="org.springframework.transaction.jta.JtaTransactionManager" />
 
 	<tx:annotation-driven transaction-manager="txManager" />
@@ -29,7 +30,9 @@
 		<property name="partitionID" value="banking"/>
 		<property name="routingMap">
 			<map>
-				<entry key="com.microsoft.azure.demo.impl.SimpleDepositFunds"
+				<entry key="com.microsoft.azure.demo.impl.CreateAccountCommand"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.Account" />
+				<entry key="com.microsoft.azure.demo.impl.DepositFundsCommand"
 					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.Account" />
 			</map>
 		</property>
