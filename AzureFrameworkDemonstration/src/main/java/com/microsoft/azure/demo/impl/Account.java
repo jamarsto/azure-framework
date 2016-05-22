@@ -21,6 +21,11 @@ public final class Account extends AbstractAggregate {
 		return Boolean.TRUE;
 	}
 
+	public Boolean apply(final SavedAccount event) {
+		balance = event.getBalance();
+		return Boolean.TRUE;
+	}
+
 	public List<Event> decide(final CreateAccountCommand command) {
 		final List<Event> results = new ArrayList<Event>();
 		results.add(new CreatedAccount());
@@ -35,6 +40,6 @@ public final class Account extends AbstractAggregate {
 
 	@Override
 	protected SnapshotEvent snapshot() {
-		return new SavedAccount(getID(), balance);
+		return new SavedAccount(balance);
 	}
 }
