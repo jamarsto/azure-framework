@@ -3,8 +3,6 @@ package com.microsoft.azure.demo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.microsoft.azure.demo.DepositedFunds;
-import com.microsoft.azure.demo.SavedAccount;
 import com.microsoft.azure.demo.internal.InternalDepositFunds;
 import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.event.Event;

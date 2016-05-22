@@ -1,11 +1,14 @@
 package com.microsoft.azure.demo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public interface HarnessService {
+public interface HarnessService extends Serializable {
 
-	void depositFunds(BigDecimal amount);
-	
-	void testPreconditions();
+	void depositFunds();
+
+	void setAmount(final BigDecimal amount);
+
+	BigDecimal getAmount();
 
 }

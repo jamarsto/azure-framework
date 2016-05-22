@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.microsoft.azure.demo.DepositedFunds;
 import com.microsoft.azure.demo.internal.InternalDepositFunds;
 import com.microsoft.azure.framework.domain.entity.AbstractEntity;
 import com.microsoft.azure.framework.domain.event.Event;
