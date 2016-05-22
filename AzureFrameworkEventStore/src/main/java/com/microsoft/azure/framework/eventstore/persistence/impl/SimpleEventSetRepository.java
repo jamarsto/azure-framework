@@ -57,7 +57,7 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 			return eventSetBuilder.buildFromVersion(startVersion).buildToVersion(endVersion)
 					.buildEvents(deserialize(entries)).build();
 		} else {
-			return eventSetBuilder.buildFromVersion(-1L).buildToVersion(-1L).buildEvents(EMPTY).build();
+			return eventSetBuilder.buildFromVersion(0L).buildToVersion(0L).buildEvents(EMPTY).build();
 		}
 	}
 
@@ -75,7 +75,7 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 			return eventSetBuilder.buildFromVersion(startVersion).buildToVersion(endVersion)
 					.buildEvents(deserialize(entries)).build();
 		} else {
-			return eventSetBuilder.buildFromVersion(-1L).buildToVersion(-1L).buildEvents(EMPTY).build();
+			return eventSetBuilder.buildFromVersion(0L).buildToVersion(0L).buildEvents(EMPTY).build();
 		}
 	}
 
