@@ -9,12 +9,12 @@ import org.springframework.stereotype.Controller;
 
 import com.microsoft.azure.demo.CreateAccount;
 import com.microsoft.azure.demo.DepositFunds;
-import com.microsoft.azure.demo.HarnessService;
+import com.microsoft.azure.demo.DepositFundsService;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
 
-@Controller("harnessService")
+@Controller("depositFundsService")
 @Scope("request")
-public final class SimpleHarnessService implements HarnessService {
+public final class SimpleDepositFundsService implements DepositFundsService {
 	@Autowired
 	private CreateAccount.BuilderFactory createAccountBuilderFactory;
 	@Autowired
@@ -36,6 +36,15 @@ public final class SimpleHarnessService implements HarnessService {
 		final DepositFunds depositFunds = depositFundsBuilder.build();
 
 		commandProcessor.doCommand(createAccount);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
+		commandProcessor.doCommand(depositFunds);
 		commandProcessor.doCommand(depositFunds);
 	}
 

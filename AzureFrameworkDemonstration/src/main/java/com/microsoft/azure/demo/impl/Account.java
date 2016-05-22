@@ -12,7 +12,6 @@ public final class Account extends AbstractAggregate {
 	private BigDecimal balance;
 
 	public Boolean apply(final CreatedAccount event) {
-		setID(event.getID());
 		balance = event.getBalance();
 		return Boolean.TRUE;
 	}
@@ -24,7 +23,7 @@ public final class Account extends AbstractAggregate {
 
 	public List<Event> decide(final CreateAccountCommand command) {
 		final List<Event> results = new ArrayList<Event>();
-		results.add(new CreatedAccount(command.getAggregateID()));
+		results.add(new CreatedAccount());
 		return results;
 	}
 

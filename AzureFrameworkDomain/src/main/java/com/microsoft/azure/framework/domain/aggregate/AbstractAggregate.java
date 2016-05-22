@@ -7,16 +7,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.domain.entity.Entity;
+import com.microsoft.azure.framework.domain.event.CreatedEvent;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 
 public abstract class AbstractAggregate implements Aggregate {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregate.class);
 	@Autowired
 	private AutowireCapableBeanFactory autowireBeanFactory;
 	private final List<Event> events = new ArrayList<Event>();
@@ -31,6 +35,7 @@ public abstract class AbstractAggregate implements Aggregate {
 	public final Boolean apply(final List<Event> events) {
 		try {
 			if (lastSnapshot == 0L && !events.isEmpty() && !(events.get(0) instanceof SnapshotEvent)) {
+				LOGGER.warn("lastSnapshot is zero and the first event is not a SnaphotEvent");
 				return Boolean.FALSE;
 			}
 			Long localVersion = version;
@@ -55,6 +60,9 @@ public abstract class AbstractAggregate implements Aggregate {
 
 	@Override
 	public final void commit() {
+		if (lastSnapshot == 0L && !events.isEmpty() && events.get(0) instanceof CreatedEvent) {
+			lastSnapshot = 1L;
+		}
 		version += events.size();
 		events.clear();
 	}
@@ -107,7 +115,8 @@ public abstract class AbstractAggregate implements Aggregate {
 	}
 
 	@SuppressWarnings("unused")
-	private void initializeVersion(final Long version) {
+	private void initialize(final UUID id, final Long version) {
+		this.id = id;
 		this.version = version;
 		this.lastSnapshot = version;
 	}
@@ -125,14 +134,6 @@ public abstract class AbstractAggregate implements Aggregate {
 			throw new AggregateException();
 		}
 		events.clear();
-	}
-
-	protected final void setID(final UUID id) {
-		this.id = id;
-	}
-
-	protected final void setLastSnapshot(final Long lastSnapshot) {
-		this.lastSnapshot = lastSnapshot;
 	}
 
 	protected abstract SnapshotEvent snapshot();

@@ -2,7 +2,7 @@ package com.microsoft.azure.demo;
 
 import java.math.BigDecimal;
 
-public interface HarnessService {
+public interface DepositFundsService {
 
 	void depositFunds();
 
