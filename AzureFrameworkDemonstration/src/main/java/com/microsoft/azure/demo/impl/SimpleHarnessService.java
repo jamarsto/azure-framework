@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.microsoft.azure.demo.CreateAccount;
 import com.microsoft.azure.demo.DepositFunds;
 import com.microsoft.azure.demo.HarnessService;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
@@ -15,19 +16,26 @@ import com.microsoft.azure.framework.command.processor.CommandProcessor;
 @Scope("request")
 public final class SimpleHarnessService implements HarnessService {
 	@Autowired
-	private DepositFunds.BuilderFactory commandBuilderFactory;
+	private CreateAccount.BuilderFactory createAccountBuilderFactory;
+	@Autowired
+	private DepositFunds.BuilderFactory depositFundsBuilderFactory;
 	@Autowired
 	private CommandProcessor commandProcessor;
 	private BigDecimal amount;
 
 	@Override
 	public void depositFunds() {
-		final DepositFunds.Builder commandBuilder = commandBuilderFactory.create();
+		final CreateAccount.Builder createAccountBuilder = createAccountBuilderFactory.create();
+		final DepositFunds.Builder depositFundsBuilder = depositFundsBuilderFactory.create();
+		final UUID id = UUID.randomUUID();
 
-		commandBuilder.buildAccountId(UUID.randomUUID()).buildAmount(amount);
+		createAccountBuilder.buildAccountId(id);
+		final CreateAccount createAccount = createAccountBuilder.build();
 
-		final DepositFunds depositFunds = commandBuilder.build();
+		depositFundsBuilder.buildAccountId(id).buildAmount(amount);
+		final DepositFunds depositFunds = depositFundsBuilder.build();
 
+		commandProcessor.doCommand(createAccount);
 		commandProcessor.doCommand(depositFunds);
 	}
 
