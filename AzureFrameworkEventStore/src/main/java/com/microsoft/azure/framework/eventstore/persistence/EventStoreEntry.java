@@ -27,7 +27,7 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 				+ "ORDER BY e.version DESC"),
 		@NamedQuery(name = "EventStoreEntry.classNameAndVersionRange", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
-				+ "AND e.eventClassName = :eventClassName AND e.version >= :fromVersion AND e.version <= toVersion "
+				+ "AND e.eventClassName = :eventClassName AND e.version >= :fromVersion AND e.version <= :toVersion "
 				+ "ORDER BY e.version ASC"),
 		@NamedQuery(name = "EventStoreEntry.classNameAndChangeSetID", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
@@ -39,7 +39,7 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 				+ "ORDER BY e.version ASC"),
 		@NamedQuery(name = "EventStoreEntry.versionRange", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
-				+ "AND e.version >= :fromVersion AND e.version <= toVersion " 
+				+ "AND e.version >= :fromVersion AND e.version <= :toVersion " 
 				+ "ORDER BY e.version ASC") })
 @Entity
 @Table(name = "EVENT_STORE_ENTRY")
