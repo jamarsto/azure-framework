@@ -9,8 +9,7 @@
 		<class>com.microsoft.azure.framework.eventstore.persistence.EventStoreEntry</class>
 		<non-jta-data-source>java:/jdbc/unmanaged/demo</non-jta-data-source>
 		<properties>
-			<property name="openjpa.jdbc.Schema" value="dbo" />
-			<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2012Dialect" />
             <property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/persistence/event-store-unit-factory" />
 		</properties>
 	</persistence-unit>

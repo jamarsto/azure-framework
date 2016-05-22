@@ -10,7 +10,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.microsoft.azure.framework.eventstore.persistence.EventStoreDAO;
@@ -23,7 +22,7 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 	private EntityManager entityManager;
 
 	@SuppressWarnings("unchecked")
-	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
+	@Transactional(readOnly = true)
 	@Override
 	public List<EventStoreEntry> getEvents(final String partitionID, final String bucketID, final UUID streamID,
 			final Class<?> filter, final Long fromVersion, final Long toVersion) {
@@ -51,7 +50,7 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
+	@Transactional(readOnly = true)
 	@Override
 	public List<EventStoreEntry> getEvents(final String partitionID, final String bucketID, final UUID streamID,
 			final Class<?> filter, final UUID changeSetID) {
@@ -69,7 +68,7 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 		}
 	}
 
-	@Transactional(isolation = Isolation.REPEATABLE_READ)
+	@Transactional
 	@Override
 	public void putEvents(final List<EventStoreEntry> entries) {
 		for (final EventStoreEntry entry : entries) {

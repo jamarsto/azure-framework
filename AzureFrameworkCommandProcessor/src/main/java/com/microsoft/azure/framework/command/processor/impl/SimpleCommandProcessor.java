@@ -15,9 +15,9 @@ public final class SimpleCommandProcessor implements CommandProcessor {
 
 	@Override
 	public void doCommand(final Command command) {
-		final DomainService service = commandProcessorConfiguration.getRoutingMap().get(command.getClass().getName());
+		DomainService service = commandProcessorConfiguration.getRoutingMap().get(command.getClass().getName());
 		if (service == null) {
-			commandProcessorConfiguration.getRoutingMap().get("DEFAULT_DOMAIN_SERVICE");
+			service = commandProcessorConfiguration.getRoutingMap().get("DEFAULT_DOMAIN_SERVICE");
 		}
 		service.doCommand(command);
 	}
