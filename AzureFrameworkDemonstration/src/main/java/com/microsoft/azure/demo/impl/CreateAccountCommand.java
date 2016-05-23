@@ -41,7 +41,10 @@ public final class CreateAccountCommand extends AbstractCommand implements Creat
 		}
 	}
 
-	private final UUID id;
+	private UUID id;
+	
+	public CreateAccountCommand() {
+	}
 
 	private CreateAccountCommand(final Builder builder) {
 		this.id = builder.entityID;

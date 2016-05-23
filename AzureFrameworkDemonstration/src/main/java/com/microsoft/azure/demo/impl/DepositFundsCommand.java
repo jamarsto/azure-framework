@@ -52,8 +52,11 @@ public final class DepositFundsCommand extends AbstractCommand implements Deposi
 		}
 	}
 
-	private final BigDecimal amount;
-	private final UUID id;
+	private BigDecimal amount;
+	private UUID id;
+	
+	public DepositFundsCommand() {
+	}
 
 	private DepositFundsCommand(final Builder builder) {
 		this.id = builder.entityID;

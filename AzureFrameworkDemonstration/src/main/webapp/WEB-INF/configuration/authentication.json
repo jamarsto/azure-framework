@@ -2,11 +2,8 @@
   "exclusionUriPatterns": [
     "/",
     "/index.xhtml",
-    "/logout",
-    "unauthenticated/*"
+    "/command/*"
   ],
   "authorisationUriPatterns": [
-    {"uriPattern": "/authorised.xhtml", "roles": [ "JavaEEManagers", "JavaEEPowerUsers" ]},
-    {"uriPattern": "/authorised/*", "roles": [ "JavaEEManagers", "JavaEEPowerUsers" ]}
   ]
 }

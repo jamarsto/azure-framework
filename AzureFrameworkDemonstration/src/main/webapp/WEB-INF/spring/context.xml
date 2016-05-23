@@ -20,6 +20,17 @@
 
 	<tx:annotation-driven transaction-manager="txManager" />
 
+	<bean id="commandServiceConfiguration" class="com.microsoft.azure.demo.impl.SimpleCommandServiceConfiguration">
+		<property name="commandMap">
+			<map>
+				<entry key="CreateAccountCommand"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.CreateAccountCommand" />
+				<entry key="DepositFundsCommand"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.DepositFundsCommand" />
+			</map>
+		</property>
+	</bean>
+
 	<bean id="domainServiceConfiguration" class="com.microsoft.azure.framework.domain.service.impl.SimpleDomainServiceConfiguration">
 		<property name="partitionID" value="banking"/>
 		<property name="routingMap">
@@ -33,7 +44,7 @@
 		<property name="snapshotMap">
 			<map>
 				<entry key="com.microsoft.azure.demo.impl.Account"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.CreatedAccount" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.SavedAccount" />
 			</map>
 		</property>
 	</bean>
