@@ -20,13 +20,13 @@
 
 	<tx:annotation-driven transaction-manager="txManager" />
 
-	<bean id="commandServiceConfiguration" class="com.microsoft.azure.demo.impl.SimpleCommandServiceConfiguration">
+	<bean id="commandServiceConfiguration" class="com.microsoft.azure.framework.rest.impl.SimpleCommandServiceConfiguration">
 		<property name="commandMap">
 			<map>
 				<entry key="CreateAccount"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.CreateAccountCommand" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.command.impl.CreateAccountCommand" />
 				<entry key="DepositFunds"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.DepositFundsCommand" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.command.impl.DepositFundsCommand" />
 			</map>
 		</property>
 	</bean>
@@ -35,16 +35,16 @@
 		<property name="partitionID" value="banking"/>
 		<property name="routingMap">
 			<map>
-				<entry key="com.microsoft.azure.demo.impl.CreateAccountCommand"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.Account" />
-				<entry key="com.microsoft.azure.demo.impl.DepositFundsCommand"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.Account" />
+				<entry key="com.microsoft.azure.demo.command.impl.CreateAccountCommand"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.aggregate.impl.Account" />
+				<entry key="com.microsoft.azure.demo.command.impl.DepositFundsCommand"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.aggregate.impl.Account" />
 			</map>
 		</property>
 		<property name="snapshotMap">
 			<map>
 				<entry key="com.microsoft.azure.demo.impl.Account"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.SavedAccount" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.event.impl.SavedAccount" />
 			</map>
 		</property>
 	</bean>
