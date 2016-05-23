@@ -2,7 +2,7 @@
   "exclusionUriPatterns": [
     "/",
     "/index.xhtml",
-    "/command/*"
+    "/rest/*"
   ],
   "authorisationUriPatterns": [
   ]

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.microsoft.azure.demo.CommandHandler;
 import com.microsoft.azure.demo.CommandService;
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.command.CommandException;
@@ -24,18 +25,20 @@ import com.microsoft.azure.framework.eventstore.persistence.SerializationExcepti
 import com.microsoft.azure.framework.precondition.PreconditionException;
 
 @Path("/command")
-public class SimpleCommandHandler {
+public class SimpleCommandHandler implements CommandHandler {
 
 	@GET
-	@Path("new/uuid")
+	@Path("/new/uuid")
 	@Produces("application/json")
+	@Override
 	public Response handle() {
 		return Response.ok(new UniqueID(UUID.randomUUID())).build();
 	}
 
 	@PUT
-	@Path("{commandName}")
+	@Path("/{commandName}")
 	@Produces("application/json")
+	@Override
 	public Response handle(final @Context ServletContext servletContext,
 			final @PathParam("commandName") String commandName, final String json) {
 		try {
@@ -43,14 +46,11 @@ public class SimpleCommandHandler {
 			final CommandProcessor commandProcessor = getBean(servletContext, CommandProcessor.class);
 			final Command command = commandService.createCommand(commandName, json);
 			commandProcessor.doCommand(command);
-
-			command.getAggregateID();
+			return Response.ok(new UniqueID(command.getAggregateID())).build();
 		} catch (final CommandException | DomainServiceException | AggregateException | SerializationException
 				| PreconditionException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-
-		return Response.ok().build();
 	}
 
 	private <T> T getBean(final ServletContext servletContext, final Class<T> clazz) {
