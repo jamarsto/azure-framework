@@ -43,7 +43,7 @@
 		</property>
 		<property name="snapshotMap">
 			<map>
-				<entry key="com.microsoft.azure.demo.impl.Account"
+				<entry key="com.microsoft.azure.demo.aggregate.impl.Account"
 					value-type="java.lang.Class" value="com.microsoft.azure.demo.event.impl.SavedAccount" />
 			</map>
 		</property>
