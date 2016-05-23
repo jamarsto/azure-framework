@@ -1,6 +1,7 @@
 package com.microsoft.azure.demo;
 
 import javax.servlet.ServletContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -19,6 +20,7 @@ public interface CommandHandler {
 	@PUT
 	@Path("/{commandName}")
 	@Produces("application/json")
+	@Consumes("application/json")
 	Response handle(@Context ServletContext servletContext, @PathParam("commandName") String commandName, String json);
 
 }

@@ -2,7 +2,9 @@ package com.microsoft.azure.demo.impl;
 
 import java.util.UUID;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -21,7 +23,6 @@ import com.microsoft.azure.framework.command.CommandException;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
-import com.microsoft.azure.framework.eventstore.persistence.SerializationException;
 import com.microsoft.azure.framework.precondition.PreconditionException;
 
 @Path("/command")
@@ -38,6 +39,7 @@ public class SimpleCommandHandler implements CommandHandler {
 	@PUT
 	@Path("/{commandName}")
 	@Produces("application/json")
+	@Consumes("application/json")
 	@Override
 	public Response handle(final @Context ServletContext servletContext,
 			final @PathParam("commandName") String commandName, final String json) {
@@ -47,9 +49,22 @@ public class SimpleCommandHandler implements CommandHandler {
 			final Command command = commandService.createCommand(commandName, json);
 			commandProcessor.doCommand(command);
 			return Response.ok(new UniqueID(command.getAggregateID())).build();
-		} catch (final CommandException | DomainServiceException | AggregateException | SerializationException
-				| PreconditionException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		} catch (final AggregateException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.AGGREGATE, e.getMessage()))
+					.build();
+		} catch (final CommandException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.COMMAND, e.getMessage()))
+					.build();
+		} catch (final DomainServiceException e) {
+			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.DOMAIN_SERVICE, e.getMessage())).build();
+		} catch (final PersistenceException e) {
+			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.PERSISTENCE, e.getMessage())).build();
+		} catch (final PreconditionException e) {
+			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
+					.build();
+		} catch (final RuntimeException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.RUNTIME, e.getMessage()))
+					.build();
 		}
 	}
 

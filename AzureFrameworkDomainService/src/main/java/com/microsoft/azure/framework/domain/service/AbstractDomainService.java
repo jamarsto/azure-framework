@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
+import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.eventstore.InputEventStream;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
@@ -25,7 +26,7 @@ public abstract class AbstractDomainService implements DomainService {
 	protected final void applyEvents(final String message, final Aggregate aggregate, final List<Event> events) {
 		final Boolean result = aggregate.apply(events);
 		if (result.equals(Boolean.FALSE)) {
-			throw new DomainServiceException(message);
+			throw new AggregateException(message);
 		}
 	}
 
@@ -37,7 +38,7 @@ public abstract class AbstractDomainService implements DomainService {
 			initialize(aggregate, command.getAggregateID());
 			return aggregate;
 		} catch (InstantiationException | IllegalAccessException | BeansException e) {
-			throw new DomainServiceException(e.getMessage(), e);
+			throw new AggregateException(e.getMessage(), e);
 		}
 	}
 
@@ -54,7 +55,7 @@ public abstract class AbstractDomainService implements DomainService {
 			}
 			return ies.getFromVersion();
 		} catch (IOException e) {
-			throw new DomainServiceException(e.getMessage(), e);
+			throw new AggregateException(e.getMessage(), e);
 		}
 	}
 
@@ -74,7 +75,7 @@ public abstract class AbstractDomainService implements DomainService {
 				aggregate.commit();
 			}
 		} catch (IOException e) {
-			throw new DomainServiceException(e.getMessage(), e);
+			throw new AggregateException(e.getMessage(), e);
 		}
 	}
 
@@ -85,7 +86,7 @@ public abstract class AbstractDomainService implements DomainService {
 			method.invoke(aggregate, id, 0L);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new DomainServiceException(e.getMessage(), e);
+			throw new AggregateException(e.getMessage(), e);
 		}
 	}
 
@@ -96,7 +97,7 @@ public abstract class AbstractDomainService implements DomainService {
 			method.invoke(aggregate, aggregate.getID(), fromVersion);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new DomainServiceException(e.getMessage(), e);
+			throw new AggregateException(e.getMessage(), e);
 		}
 	}
 
@@ -111,7 +112,7 @@ public abstract class AbstractDomainService implements DomainService {
 			oes.write((List<Serializable>) (List<?>) aggregate.getEvents());
 			oes.flush(UUID.randomUUID());
 		} catch (IOException e) {
-			throw new DomainServiceException(e.getMessage(), e);
+			throw new PersistenceException(e.getMessage(), e);
 		}
 	}
 
@@ -124,5 +125,4 @@ public abstract class AbstractDomainService implements DomainService {
 	public final void setAutowireCapableBeanFactory(final AutowireCapableBeanFactory autowireBeanFactory) {
 		this.autowireBeanFactory = autowireBeanFactory;
 	}
-
 }

@@ -161,7 +161,11 @@ public final class SimpleInputEventStream implements InputEventStream {
 		this.changeSetID = builder.changeSetID;
 		this.filter = builder.filter;
 		this.isClosed = Boolean.FALSE;
-		list = loadEvents();
+		try {
+			list = loadEvents();
+		} catch (final RuntimeException e) {
+			throw new IOException(e.getMessage(), e);
+		}
 		iterator = list.iterator();
 	}
 

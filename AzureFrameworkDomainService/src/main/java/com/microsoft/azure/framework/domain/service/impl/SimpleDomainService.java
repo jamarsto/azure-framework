@@ -19,9 +19,9 @@ public final class SimpleDomainService extends AbstractDomainService {
 		populateAggregateFromStream(command, aggregate);
 		final List<Event> events = aggregate.decide(command);
 		if (!events.isEmpty()) {
-			applyEvents("Entity failed to apply events.", aggregate, events);
+			applyEvents("Aggregate failed to apply events.", aggregate, events);
 		} else {
-			throw new DomainServiceException("Entity refused to apply events.");
+			throw new DomainServiceException("Aggregate refused to apply events.");
 		}
 		populateStreamFromAggregate(aggregate);
 		// publish events here
