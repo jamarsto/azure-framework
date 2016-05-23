@@ -15,14 +15,17 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.domain.entity.Entity;
 import com.microsoft.azure.framework.domain.event.CreatedEvent;
+import com.microsoft.azure.framework.domain.event.DeletedEvent;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 
 public abstract class AbstractAggregate implements Aggregate {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregate.class);
+	private static final List<Event> EMPTY = Collections.unmodifiableList(new ArrayList<Event>());
 	@Autowired
 	private AutowireCapableBeanFactory autowireBeanFactory;
+	private Boolean deleted = Boolean.FALSE;
 	private final List<Event> events = new ArrayList<Event>();
 	private UUID id;
 	private Long lastSnapshot = 0L;
@@ -44,6 +47,9 @@ public abstract class AbstractAggregate implements Aggregate {
 			for (final Serializable event : events) {
 				count++;
 				localVersion++;
+				if (deleted) {
+					return Boolean.FALSE;
+				}
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
 						event);
 				if (result.equals(Boolean.FALSE)) {
@@ -53,13 +59,17 @@ public abstract class AbstractAggregate implements Aggregate {
 					lastSnapshot = localVersion;
 					offset = count;
 				}
+				if (event instanceof DeletedEvent) {
+					deleted = Boolean.TRUE;
+				}
 			}
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
 		this.events.addAll(events);
-		if (version > 1L && !events.isEmpty() && version - lastSnapshot + events.size() - offset + 1 >= snapshotInterval) {
+		if (version > 1L && !events.isEmpty()
+				&& version - lastSnapshot + events.size() - offset + 1 >= snapshotInterval) {
 			this.events.add(snapshot());
 		}
 		return Boolean.TRUE;
@@ -95,6 +105,9 @@ public abstract class AbstractAggregate implements Aggregate {
 	@Override
 	public final List<Event> decide(final Command command) {
 		try {
+			if (deleted) {
+				return EMPTY;
+			}
 			final List<Event> events = (List<Event>) this.getClass().getMethod("decide", command.getClass())
 					.invoke(this, command);
 			return events;
