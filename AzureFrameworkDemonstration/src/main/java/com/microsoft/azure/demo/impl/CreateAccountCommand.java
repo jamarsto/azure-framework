@@ -54,4 +54,9 @@ public final class CreateAccountCommand extends AbstractCommand implements Creat
 	public UUID getAggregateId() {
 		return aggregateId;
 	}
+
+	@Override
+	public void validate() {
+		preconditionService.requiresNotNull("Account ID is required.", aggregateId);
+	}
 }

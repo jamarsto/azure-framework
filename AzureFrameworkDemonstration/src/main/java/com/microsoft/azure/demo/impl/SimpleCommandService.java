@@ -3,6 +3,7 @@ package com.microsoft.azure.demo.impl;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,13 +16,18 @@ import com.microsoft.azure.framework.command.CommandException;
 public class SimpleCommandService implements CommandService {
 	@Autowired
 	private CommandServiceConfiguration commandServiceConfiguration;
-	
+	@Autowired
+	private AutowireCapableBeanFactory autowireBeanFactory;
+
 	@Override
 	public Command createCommand(final String commandName, final String json) {
 		final Class<?> clazz = commandServiceConfiguration.getCommandMap().get(commandName);
 		final ObjectMapper mapper = new ObjectMapper();
 		try {
-			return (Command) mapper.readValue(json, clazz);
+			final Command command = (Command) mapper.readValue(json, clazz);
+			autowireBeanFactory.autowireBean(command);
+			command.validate();
+			return command;
 		} catch (IOException e) {
 			throw new CommandException(e.getMessage(), e);
 		}

@@ -17,5 +17,7 @@ public interface Command {
 	}
 
 	UUID getAggregateId();
+	
+	void validate();
 
 }

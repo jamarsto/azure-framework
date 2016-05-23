@@ -13,8 +13,8 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 public final class DepositFundsCommand extends AbstractCommand implements DepositFunds {
 
 	public static final class Builder implements DepositFunds.Builder {
-		private BigDecimal amount;
 		private UUID aggregateId;
+		private BigDecimal amount;
 		@Autowired
 		private PreconditionService preconditionService;
 
@@ -52,9 +52,9 @@ public final class DepositFundsCommand extends AbstractCommand implements Deposi
 		}
 	}
 
-	private BigDecimal amount;
 	private UUID aggregateId;
-	
+	private BigDecimal amount;
+
 	public DepositFundsCommand() {
 	}
 
@@ -70,5 +70,11 @@ public final class DepositFundsCommand extends AbstractCommand implements Deposi
 
 	public BigDecimal getAmount() {
 		return amount;
+	}
+
+	@Override
+	public void validate() {
+		preconditionService.requiresNotNull("Account ID is required.", aggregateId);
+		preconditionService.requiresNotNull("Amount is required.", amount);
 	}
 }
