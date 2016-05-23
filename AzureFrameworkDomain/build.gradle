@@ -29,8 +29,7 @@ install {
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'org.springframework:spring-context-support:4.2.6.RELEASE'
-    compile 'com-microsoft-azure:azure-framework-command:1.0.0'
-    compile 'com-microsoft-azure:azure-framework-preconditionservice:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-rest:1.0.0'
 
     testCompile 'junit:junit:4.12'
 }
