@@ -22,4 +22,4 @@ This framework uses:
 * Spring
 * Dependency Injection on Aggregate and Entity Beans
 * JPA
-* REST (jax-rs) using Jackson FasterXML to enable a single handler for all commands
+* REST (JAX-RS) using Jackson FasterXML to enable a single handler for all commands
