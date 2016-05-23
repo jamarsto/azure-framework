@@ -12,22 +12,22 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 public final class CreateAccountCommand extends AbstractCommand implements CreateAccount {
 
 	public static final class Builder implements CreateAccount.Builder {
-		private UUID entityID;
+		private UUID aggregateId;
 		@Autowired
 		private PreconditionService preconditionService;
 
 		@Override
 		public CreateAccount build() {
-			preconditionService.requiresNotNull("Account ID is required.", entityID);
+			preconditionService.requiresNotNull("Account ID is required.", aggregateId);
 
 			return new CreateAccountCommand(this);
 		}
 
 		@Override
-		public Builder buildAccountId(final UUID entityID) {
-			preconditionService.requiresNotNull("Account ID is required.", entityID);
+		public Builder buildAccountId(final UUID aggregateId) {
+			preconditionService.requiresNotNull("Account ID is required.", aggregateId);
 
-			this.entityID = entityID;
+			this.aggregateId = aggregateId;
 			return this;
 		}
 	}
@@ -41,17 +41,17 @@ public final class CreateAccountCommand extends AbstractCommand implements Creat
 		}
 	}
 
-	private UUID id;
-	
+	private UUID aggregateId;
+
 	public CreateAccountCommand() {
 	}
 
 	private CreateAccountCommand(final Builder builder) {
-		this.id = builder.entityID;
+		this.aggregateId = builder.aggregateId;
 	}
 
 	@Override
-	public UUID getAggregateID() {
-		return id;
+	public UUID getAggregateId() {
+		return aggregateId;
 	}
 }

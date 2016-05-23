@@ -16,6 +16,6 @@ public interface Command {
 
 	}
 
-	UUID getAggregateID();
+	UUID getAggregateId();
 
 }

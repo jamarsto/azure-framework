@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -30,7 +31,7 @@ public class SimpleCommandHandler implements CommandHandler {
 
 	@GET
 	@Path("/new/uuid")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response handle() {
 		return Response.ok(new UniqueID(UUID.randomUUID())).build();
@@ -38,8 +39,8 @@ public class SimpleCommandHandler implements CommandHandler {
 
 	@PUT
 	@Path("/{commandName}")
-	@Produces("application/json")
-	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public Response handle(final @Context ServletContext servletContext,
 			final @PathParam("commandName") String commandName, final String json) {
@@ -48,7 +49,7 @@ public class SimpleCommandHandler implements CommandHandler {
 			final CommandProcessor commandProcessor = getBean(servletContext, CommandProcessor.class);
 			final Command command = commandService.createCommand(commandName, json);
 			commandProcessor.doCommand(command);
-			return Response.ok(new UniqueID(command.getAggregateID())).build();
+			return Response.ok(new UniqueID(command.getAggregateId())).build();
 		} catch (final AggregateException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.AGGREGATE, e.getMessage()))
 					.build();
@@ -63,6 +64,8 @@ public class SimpleCommandHandler implements CommandHandler {
 			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
 					.build();
 		} catch (final RuntimeException e) {
+			System.out.println(json);
+			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.RUNTIME, e.getMessage()))
 					.build();
 		}

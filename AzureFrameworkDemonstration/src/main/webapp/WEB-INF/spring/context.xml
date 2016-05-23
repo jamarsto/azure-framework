@@ -23,9 +23,9 @@
 	<bean id="commandServiceConfiguration" class="com.microsoft.azure.demo.impl.SimpleCommandServiceConfiguration">
 		<property name="commandMap">
 			<map>
-				<entry key="CreateAccountCommand"
+				<entry key="CreateAccount"
 					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.CreateAccountCommand" />
-				<entry key="DepositFundsCommand"
+				<entry key="DepositFunds"
 					value-type="java.lang.Class" value="com.microsoft.azure.demo.impl.DepositFundsCommand" />
 			</map>
 		</property>

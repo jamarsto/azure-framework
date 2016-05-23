@@ -14,23 +14,23 @@ public final class DepositFundsCommand extends AbstractCommand implements Deposi
 
 	public static final class Builder implements DepositFunds.Builder {
 		private BigDecimal amount;
-		private UUID entityID;
+		private UUID aggregateId;
 		@Autowired
 		private PreconditionService preconditionService;
 
 		@Override
 		public DepositFunds build() {
-			preconditionService.requiresNotNull("Account ID is required.", entityID);
+			preconditionService.requiresNotNull("Account ID is required.", aggregateId);
 			preconditionService.requiresNotNull("Amount is required.", amount);
 
 			return new DepositFundsCommand(this);
 		}
 
 		@Override
-		public Builder buildAccountId(final UUID entityID) {
-			preconditionService.requiresNotNull("Account ID is required.", entityID);
+		public Builder buildAccountId(final UUID aggregateId) {
+			preconditionService.requiresNotNull("Account ID is required.", aggregateId);
 
-			this.entityID = entityID;
+			this.aggregateId = aggregateId;
 			return this;
 		}
 
@@ -53,19 +53,19 @@ public final class DepositFundsCommand extends AbstractCommand implements Deposi
 	}
 
 	private BigDecimal amount;
-	private UUID id;
+	private UUID aggregateId;
 	
 	public DepositFundsCommand() {
 	}
 
 	private DepositFundsCommand(final Builder builder) {
-		this.id = builder.entityID;
+		this.aggregateId = builder.aggregateId;
 		this.amount = builder.amount;
 	}
 
 	@Override
-	public UUID getAggregateID() {
-		return id;
+	public UUID getAggregateId() {
+		return aggregateId;
 	}
 
 	public BigDecimal getAmount() {
