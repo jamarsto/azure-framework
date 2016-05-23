@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo;
+package com.microsoft.azure.framework.rest;
 
 import com.microsoft.azure.framework.command.Command;
 

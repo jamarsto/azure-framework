@@ -1,10 +1,10 @@
-package com.microsoft.azure.demo.impl;
+package com.microsoft.azure.framework.rest.impl;
 
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.microsoft.azure.demo.CommandServiceConfiguration;
+import com.microsoft.azure.framework.rest.CommandServiceConfiguration;
 
 @Component
 public final class SimpleCommandServiceConfiguration implements CommandServiceConfiguration {

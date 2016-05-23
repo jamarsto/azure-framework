@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.impl;
+package com.microsoft.azure.framework.rest.impl;
 
 import java.io.IOException;
 
@@ -7,10 +7,10 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.azure.demo.CommandService;
-import com.microsoft.azure.demo.CommandServiceConfiguration;
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.command.CommandException;
+import com.microsoft.azure.framework.rest.CommandService;
+import com.microsoft.azure.framework.rest.CommandServiceConfiguration;
 
 @Component
 public class SimpleCommandService implements CommandService {

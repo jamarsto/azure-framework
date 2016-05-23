@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.impl;
+package com.microsoft.azure.demo.service.impl;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.microsoft.azure.demo.CreateAccount;
-import com.microsoft.azure.demo.DepositFunds;
-import com.microsoft.azure.demo.DepositFundsService;
+import com.microsoft.azure.demo.command.CreateAccount;
+import com.microsoft.azure.demo.command.DepositFunds;
+import com.microsoft.azure.demo.service.DepositFundsService;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
 
 @Controller("depositFundsService")

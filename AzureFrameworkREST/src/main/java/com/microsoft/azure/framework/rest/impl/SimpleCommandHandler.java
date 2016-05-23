@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.impl;
+package com.microsoft.azure.framework.rest.impl;
 
 import java.util.UUID;
 
@@ -17,14 +17,14 @@ import javax.ws.rs.core.Response.Status;
 
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.microsoft.azure.demo.CommandHandler;
-import com.microsoft.azure.demo.CommandService;
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.command.CommandException;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
 import com.microsoft.azure.framework.precondition.PreconditionException;
+import com.microsoft.azure.framework.rest.CommandHandler;
+import com.microsoft.azure.framework.rest.CommandService;
 
 @Path("/command")
 public class SimpleCommandHandler implements CommandHandler {

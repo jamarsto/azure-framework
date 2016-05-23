@@ -1,26 +1,29 @@
-package com.microsoft.azure.demo.impl;
+package com.microsoft.azure.demo.command.impl;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.microsoft.azure.demo.CreateAccount;
+import com.microsoft.azure.demo.command.DepositFunds;
 import com.microsoft.azure.framework.command.AbstractCommand;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 
-public final class CreateAccountCommand extends AbstractCommand implements CreateAccount {
+public final class DepositFundsCommand extends AbstractCommand implements DepositFunds {
 
-	public static final class Builder implements CreateAccount.Builder {
+	public static final class Builder implements DepositFunds.Builder {
 		private UUID aggregateId;
+		private BigDecimal amount;
 		@Autowired
 		private PreconditionService preconditionService;
 
 		@Override
-		public CreateAccount build() {
+		public DepositFunds build() {
 			preconditionService.requiresNotNull("Account ID is required.", aggregateId);
+			preconditionService.requiresNotNull("Amount is required.", amount);
 
-			return new CreateAccountCommand(this);
+			return new DepositFundsCommand(this);
 		}
 
 		@Override
@@ -30,24 +33,34 @@ public final class CreateAccountCommand extends AbstractCommand implements Creat
 			this.aggregateId = aggregateId;
 			return this;
 		}
+
+		@Override
+		public Builder buildAmount(final BigDecimal amount) {
+			preconditionService.requiresNotNull("Amount is required.", amount);
+
+			this.amount = amount;
+			return this;
+		}
 	}
 
 	@Component
 	public static final class BuilderFactory extends AbstractCommand.AbstractBuilderFactory
-			implements CreateAccount.BuilderFactory {
+			implements DepositFunds.BuilderFactory {
 		@Override
 		public Builder create() {
-			return inject(CreateAccountCommand.Builder.class, new Builder());
+			return inject(DepositFundsCommand.Builder.class, new Builder());
 		}
 	}
 
 	private UUID aggregateId;
+	private BigDecimal amount;
 
-	public CreateAccountCommand() {
+	public DepositFundsCommand() {
 	}
 
-	private CreateAccountCommand(final Builder builder) {
+	private DepositFundsCommand(final Builder builder) {
 		this.aggregateId = builder.aggregateId;
+		this.amount = builder.amount;
 	}
 
 	@Override
@@ -55,8 +68,13 @@ public final class CreateAccountCommand extends AbstractCommand implements Creat
 		return aggregateId;
 	}
 
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
 	@Override
 	public void validate() {
 		preconditionService.requiresNotNull("Account ID is required.", aggregateId);
+		preconditionService.requiresNotNull("Amount is required.", amount);
 	}
 }

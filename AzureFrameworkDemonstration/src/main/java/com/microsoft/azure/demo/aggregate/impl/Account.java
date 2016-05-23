@@ -1,9 +1,14 @@
-package com.microsoft.azure.demo.impl;
+package com.microsoft.azure.demo.aggregate.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.microsoft.azure.demo.command.impl.CreateAccountCommand;
+import com.microsoft.azure.demo.command.impl.DepositFundsCommand;
+import com.microsoft.azure.demo.event.impl.CreatedAccount;
+import com.microsoft.azure.demo.event.impl.DepositedFunds;
+import com.microsoft.azure.demo.event.impl.SavedAccount;
 import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.SnapshotEvent;

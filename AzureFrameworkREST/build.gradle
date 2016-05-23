@@ -1,0 +1,36 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '1.0.0'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Azure Framework REST',
+                   'Implementation-Version': version
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.groupId = 'com-microsoft-azure'
+        pom.artifactId = rootProject.name
+        pom.version = version 
+    }
+}
+
+dependencies {
+    compile 'org.springframework:spring-web:4.2.6.RELEASE'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'javax:javaee-api:6.0'
+    compile 'com-microsoft-azure:azure-framework-commandprocessor:1.0.0'
+
+    testCompile 'junit:junit:4.12'
+}

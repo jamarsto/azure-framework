@@ -1,23 +1,26 @@
-package com.microsoft.azure.demo;
+package com.microsoft.azure.demo.command;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.microsoft.azure.framework.command.Command;
 
-public interface CreateAccount extends Command {
+public interface DepositFunds extends Command {
 
 	interface Builder extends Command.Builder {
 
-		CreateAccount build();
-
+		DepositFunds build();
+		
 		Builder buildAccountId(UUID id);
-
+		
+		Builder buildAmount(BigDecimal amount);
+	
 	}
-
+	
 	interface BuilderFactory extends Command.BuilderFactory {
-
+		
 		Builder create();
-
+		
 	}
-
+	
 }
