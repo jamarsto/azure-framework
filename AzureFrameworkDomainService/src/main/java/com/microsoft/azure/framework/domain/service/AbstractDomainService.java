@@ -35,7 +35,7 @@ public abstract class AbstractDomainService implements DomainService {
 			final Class<?> clazz = domainServiceConfiguration.getRoutingMap().get(command.getClass().getName());
 			final Aggregate aggregate = (Aggregate) clazz.newInstance();
 			autowireBeanFactory.autowireBean(aggregate);
-			initialize(aggregate, command.getAggregateID());
+			initialize(aggregate, command.getAggregateId());
 			return aggregate;
 		} catch (InstantiationException | IllegalAccessException | BeansException e) {
 			throw new AggregateException(e.getMessage(), e);
@@ -46,7 +46,7 @@ public abstract class AbstractDomainService implements DomainService {
 		final InputEventStream.Builder inputEventStreamBuilder = domainServiceConfiguration
 				.getInputEventStreamBuilderFactory().create();
 		inputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
-				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateID());
+				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateId());
 		final Class<?> clazz = domainServiceConfiguration.getSnapshotMap().get(aggregate.getClass().getName());
 		inputEventStreamBuilder.buildFilter(clazz).buildFromVersion(Long.MAX_VALUE);
 		try (final InputEventStream ies = inputEventStreamBuilder.build()) {
@@ -64,7 +64,7 @@ public abstract class AbstractDomainService implements DomainService {
 		final InputEventStream.Builder inputEventStreamBuilder = domainServiceConfiguration
 				.getInputEventStreamBuilderFactory().create();
 		inputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
-				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateID())
+				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateId())
 				.buildFilter(Serializable.class).buildFromVersion(getLatestSnapshotVersion(command, aggregate))
 				.buildToVersion(Long.MAX_VALUE);
 		try (final InputEventStream ies = inputEventStreamBuilder.build()) {
