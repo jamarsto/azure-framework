@@ -27,8 +27,6 @@ install {
 
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'org.springframework:spring-context-support:4.2.6.RELEASE'
     compile 'com-microsoft-azure:azure-framework-domain:1.0.0'
     compile 'com-microsoft-azure:azure-framework-eventstore:1.0.0'
 

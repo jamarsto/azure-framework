@@ -22,18 +22,17 @@ install {
 }
 
 dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'commons-codec:commons-codec:1.10'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
     compile 'org.springframework:spring-web:4.2.6.RELEASE'
     compile 'org.springframework:spring-context-support:4.2.6.RELEASE'
     compile 'org.springframework:spring-orm:4.2.6.RELEASE'
     compile 'org.springframework.session:spring-session-data-redis:1.1.1.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
-    compile 'commons-codec:commons-codec:1.10'
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'com-microsoft-azure:azure-oidc:1.0.0'
-    compile 'javax:javaee-api:6.0'
 	compile 'org.springframework:spring-tx:4.2.6.RELEASE'
-    compile 'com-microsoft-azure:azure-framework-domainservice:1.0.0'
-    compile 'com-microsoft-azure:azure-framework-commandprocessor:1.0.0'
+    compile 'com-microsoft-azure:azure-oidc:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-rest:1.0.0'
+    providedCompile 'javax:javaee-api:6.0'
 
     testCompile 'junit:junit:4.12'
 }
