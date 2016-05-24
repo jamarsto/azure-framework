@@ -1,5 +1,6 @@
 package com.microsoft.azure.framework.eventbus.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
+import com.microsoft.azure.framework.domain.event.impl.EventEntry;
 import com.microsoft.azure.framework.eventbus.EventBus;
 import com.microsoft.azure.framework.eventbus.EventBusConfiguration;
 import com.microsoft.windowsazure.Configuration;
@@ -37,15 +39,15 @@ public final class SimpleEventBus implements EventBus {
 			if (service.getTopic(topicPath) == null) {
 				service.createTopic(topicInfo);
 			}
-			Long version = aggregate.getVersion();
-			final ObjectMapper mapper = new ObjectMapper();
-			for (final Event event : events) {
-				final String eventString = mapper.writeValueAsString(event);
-				final BrokeredMessage message = new BrokeredMessage(eventString);
-				message.setProperty("version", ++version);
-				message.setProperty("className", event.getClass().getName());
-				service.sendTopicMessage(topicPath, message);
+			final List<EventEntry> eventEntries = new ArrayList<EventEntry>();
+			for(final Event event : events) {
+				eventEntries.add(new EventEntry(event));
 			}
+			final ObjectMapper mapper = new ObjectMapper();
+			final String eventsString = mapper.writeValueAsString(eventEntries);
+			final BrokeredMessage message = new BrokeredMessage(eventsString);
+			message.setProperty("version", aggregate.getVersion() + 1L);
+			service.sendTopicMessage(topicPath, message);
 		} catch (final ServiceException e) {
 			throw new AggregateException(e.getMessage(), e);
 		} catch (final JsonProcessingException e) {
