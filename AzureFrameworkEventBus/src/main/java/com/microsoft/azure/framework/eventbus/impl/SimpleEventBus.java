@@ -3,6 +3,8 @@ package com.microsoft.azure.framework.eventbus.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,12 +31,11 @@ public final class SimpleEventBus implements EventBus {
 
 	private void createQueue(final ServiceBusContract service, final String topicPath, final TopicInfo topicInfo) {
 		try {
-			if (service.getTopic(topicPath) == null) {
-			}
-		} catch (final ServiceException e) {
+			service.getTopic(topicPath);
+		} catch (final ServiceException | WebApplicationException e) {
 			try {
 				service.createTopic(topicInfo);
-			} catch (final ServiceException se) {
+			} catch (final ServiceException | WebApplicationException se) {
 				throw new AggregateException(se.getMessage(), se);
 			}
 		}
@@ -64,8 +65,8 @@ public final class SimpleEventBus implements EventBus {
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
 			message.setProperty("version", aggregate.getVersion() + 1L);
 			service.sendTopicMessage(topicPath, message);
-		} catch (final ServiceException se) {
-			throw new AggregateException(se.getMessage(), se);
+		} catch (final ServiceException | WebApplicationException e) {
+			throw new AggregateException(e.getMessage(), e);
 		} catch (final JsonProcessingException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
