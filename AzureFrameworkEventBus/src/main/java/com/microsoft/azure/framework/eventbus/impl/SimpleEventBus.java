@@ -65,6 +65,7 @@ public final class SimpleEventBus implements EventBus {
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
 			message.setProperty("fromVersion", aggregate.getVersion() + 1L);
 			message.setProperty("toVersion", aggregate.getVersion() + eventEntries.size());
+			message.setProperty("aggregateClassName", aggregate.getClass().getName());
 			service.sendTopicMessage(topicPath, message);
 		} catch (final ServiceException | WebApplicationException e) {
 			throw new AggregateException(e.getMessage(), e);
