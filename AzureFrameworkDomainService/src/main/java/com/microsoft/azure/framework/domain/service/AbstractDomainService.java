@@ -16,12 +16,14 @@ import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
+import com.microsoft.azure.framework.eventbus.EventBus;
 import com.microsoft.azure.framework.eventstore.InputEventStream;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
 
 public abstract class AbstractDomainService implements DomainService {
 	private DomainServiceConfiguration domainServiceConfiguration;
 	private AutowireCapableBeanFactory autowireBeanFactory;
+	private EventBus eventBus;
 
 	protected final void applyEvents(final String message, final Aggregate aggregate, final List<Event> events) {
 		final Boolean result = aggregate.apply(events);
@@ -115,6 +117,10 @@ public abstract class AbstractDomainService implements DomainService {
 			throw new PersistenceException(e.getMessage(), e);
 		}
 	}
+	
+	protected final void publishEvents(final Aggregate aggregate, final List<Event> events) {
+		eventBus.publish(aggregate, events);
+	}
 
 	@Autowired
 	public final void setDomainServiceConfiguration(final DomainServiceConfiguration domainServiceConfiguration) {
@@ -124,5 +130,10 @@ public abstract class AbstractDomainService implements DomainService {
 	@Autowired
 	public final void setAutowireCapableBeanFactory(final AutowireCapableBeanFactory autowireBeanFactory) {
 		this.autowireBeanFactory = autowireBeanFactory;
+	}
+	
+	@Autowired
+	public final void setEventBus(final EventBus eventBus) {
+		this.eventBus = eventBus;
 	}
 }

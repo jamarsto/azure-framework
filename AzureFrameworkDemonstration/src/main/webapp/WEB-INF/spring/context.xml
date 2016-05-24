@@ -56,5 +56,10 @@
 			</map>
 		</property>
 	</bean>
+	
+	<bean id="eventBusConfiguration" class="com.microsoft.azure.framework.eventbus.impl.SimpleEventBusConfiguration">
+		<property name="serviceName" value="jm-java" />
+		<property name="secretName" value="BUS_SECRET" />
+	</bean>
 
 </beans>
