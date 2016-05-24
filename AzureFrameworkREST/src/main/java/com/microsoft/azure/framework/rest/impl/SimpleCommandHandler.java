@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.microsoft.azure.framework.command.Command;
@@ -28,6 +30,7 @@ import com.microsoft.azure.framework.rest.CommandService;
 
 @Path("/command")
 public class SimpleCommandHandler implements CommandHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
 
 	@GET
 	@Path("/new/uuid")
@@ -51,9 +54,11 @@ public class SimpleCommandHandler implements CommandHandler {
 			commandProcessor.doCommand(command);
 			return Response.ok(new UniqueID(command.getAggregateId())).build();
 		} catch (final AggregateException e) {
+			LOGGER.warn(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.AGGREGATE, e.getMessage()))
 					.build();
 		} catch (final CommandException e) {
+			LOGGER.warn(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.COMMAND, e.getMessage()))
 					.build();
 		} catch (final DomainServiceException e) {
@@ -64,6 +69,7 @@ public class SimpleCommandHandler implements CommandHandler {
 			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
 					.build();
 		} catch (final RuntimeException e) {
+			LOGGER.warn(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.RUNTIME, e.getMessage()))
 					.build();
 		}

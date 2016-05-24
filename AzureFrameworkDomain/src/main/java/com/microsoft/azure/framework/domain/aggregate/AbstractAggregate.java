@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
@@ -21,7 +19,6 @@ import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 
 public abstract class AbstractAggregate implements Aggregate {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregate.class);
 	private static final List<Event> EMPTY = Collections.unmodifiableList(new ArrayList<Event>());
 	@Autowired
 	private AutowireCapableBeanFactory autowireBeanFactory;
@@ -40,7 +37,6 @@ public abstract class AbstractAggregate implements Aggregate {
 		Long offset = 0L;
 		try {
 			if (lastSnapshot == 0L && !events.isEmpty() && !(events.get(0) instanceof SnapshotEvent)) {
-				LOGGER.warn("lastSnapshot is zero and the first event is not a SnaphotEvent");
 				return Boolean.FALSE;
 			}
 			Long localVersion = version;
