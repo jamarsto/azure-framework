@@ -20,6 +20,6 @@ This framework uses:
 * Dependency Inversion Principle (DIP)
 * Reflection
 * Spring
-* Dependency Injection on Aggregate and Entity Beans
+* Dependency Injection on Aggregate and Command objects
 * JPA
 * REST (JAX-RS) using Jackson FasterXML to enable a single handler for all commands
