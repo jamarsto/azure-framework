@@ -54,22 +54,25 @@ public class SimpleCommandHandler implements CommandHandler {
 			commandProcessor.doCommand(command);
 			return Response.ok(new UniqueID(command.getAggregateId())).build();
 		} catch (final AggregateException e) {
-			LOGGER.warn(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.AGGREGATE, e.getMessage()))
 					.build();
 		} catch (final CommandException e) {
-			LOGGER.warn(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.COMMAND, e.getMessage()))
 					.build();
 		} catch (final DomainServiceException e) {
+			LOGGER.info(e.getMessage(), e);
 			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.DOMAIN_SERVICE, e.getMessage())).build();
 		} catch (final PersistenceException e) {
+			LOGGER.info(e.getMessage(), e);
 			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.PERSISTENCE, e.getMessage())).build();
 		} catch (final PreconditionException e) {
+			LOGGER.info(e.getMessage(), e);
 			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
 					.build();
 		} catch (final RuntimeException e) {
-			LOGGER.warn(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.RUNTIME, e.getMessage()))
 					.build();
 		}

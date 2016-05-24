@@ -18,10 +18,13 @@ import com.microsoft.azure.framework.eventstore.persistence.EventSetRepository;
 import com.microsoft.azure.framework.eventstore.persistence.EventStoreDAO;
 import com.microsoft.azure.framework.eventstore.persistence.EventStoreEntry;
 import com.microsoft.azure.framework.eventstore.persistence.SerializationException;
+import com.microsoft.azure.framework.precondition.PreconditionService;
 
 @Component
 public final class SimpleEventSetRepository implements EventSetRepository {
 	private static final List<Serializable> EMPTY = Collections.unmodifiableList(new ArrayList<Serializable>());
+	@Autowired
+	private PreconditionService preconditionService;
 	@Autowired
 	private EventSet.BuilderFactory eventSetBuilderFactory;
 	@Autowired
@@ -48,6 +51,15 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 			final Class<?> filter, final Long fromVersion, final Long toVersion) {
 		final List<EventStoreEntry> entries = eventStoreDAO.getEvents(partitionID, bucketID, streamID, filter,
 				fromVersion, toVersion);
+		preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
+		preconditionService.requiresNotEmpty("Bucket ID is required.", bucketID);
+		preconditionService.requiresNotNull("Stream ID is required.", streamID);
+		preconditionService.requiresNotNull("Filter is required.", filter);
+		preconditionService.requiresNotNull("From Version is required.", fromVersion);
+		preconditionService.requiresGE("From Version must be greater than or equal to zero.", fromVersion, 0L);
+		preconditionService.requiresNotNull("To Version is required.", toVersion);
+		preconditionService.requiresGE("To Version must be greater than or equal to From Version.", toVersion, fromVersion);
+
 		final EventSet.Builder eventSetBuilder = eventSetBuilderFactory.create();
 		eventSetBuilder.buildPartitionID(partitionID).buildBucketID(bucketID).buildStreamID(streamID);
 
@@ -64,6 +76,12 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 	@Override
 	public EventSet getEventSet(final String partitionID, final String bucketID, final UUID streamID,
 			final Class<?> filter, final UUID changeSetID) {
+		preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
+		preconditionService.requiresNotEmpty("Bucket ID is required.", bucketID);
+		preconditionService.requiresNotNull("Stream ID is required.", streamID);
+		preconditionService.requiresNotNull("Filter is required.", filter);
+		preconditionService.requiresNotNull("Change Set ID is required.", changeSetID);
+		
 		final List<EventStoreEntry> entries = eventStoreDAO.getEvents(partitionID, bucketID, streamID, filter,
 				changeSetID);
 		final EventSet.Builder eventSetBuilder = eventSetBuilderFactory.create();
@@ -81,6 +99,9 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 
 	@Override
 	public void putEventSet(final EventSet eventSet, final UUID changeSetID) {
+		preconditionService.requiresNotNull("Event Set is required.", eventSet);
+		preconditionService.requiresNotNull("Change Set ID is required.", changeSetID);
+
 		final List<EventStoreEntry> entries = new ArrayList<EventStoreEntry>();
 		final EventStoreEntry.Builder builder = eventStoreEntryBuilderFactory.create();
 		builder.buildPartitionID(eventSet.getPartitionID()).buildBucketID(eventSet.getBucketID())
