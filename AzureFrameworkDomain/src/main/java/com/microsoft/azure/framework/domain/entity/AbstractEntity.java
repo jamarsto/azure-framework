@@ -19,6 +19,8 @@ public abstract class AbstractEntity implements Entity {
 
 	@Override
 	public final Boolean apply(final List<Event> events) {
+		preconditionService.requiresNotNull("Events are required.", events);
+		
 		try {
 			for (final Serializable event : events) {
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
@@ -36,6 +38,8 @@ public abstract class AbstractEntity implements Entity {
 
 	@Override
 	public final Boolean compensate(final List<Event> events) {
+		preconditionService.requiresNotNull("Events are required.", events);
+		
 		try {
 			for (final Serializable event : events) {
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
@@ -54,6 +58,8 @@ public abstract class AbstractEntity implements Entity {
 	@SuppressWarnings("unchecked")
 	@Override
 	public final List<Event> decide(final Command command) {
+		preconditionService.requiresNotNull("Command is required.", command);
+		
 		try {
 			final List<Event> events = (List<Event>) this.getClass().getMethod("decide", command.getClass())
 					.invoke(this, command);

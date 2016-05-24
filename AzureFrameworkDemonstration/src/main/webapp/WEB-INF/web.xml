@@ -7,12 +7,6 @@
       /WEB-INF/spring/*.xml
     </param-value>
   </context-param>
-  <context-param>
-    <param-name>javax.faces.CONFIG_FILES</param-name>
-    <param-value>
-      /WEB-INF/faces-config.xml
-    </param-value>
-  </context-param>
   <filter>
     <filter-name>springSessionRepositoryFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -53,19 +47,6 @@
   	<dispatcher>REQUEST</dispatcher>
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
-  <servlet>
-    <servlet-name>Faces Servlet</servlet-name>
-    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>myServlet</servlet-name>
-    <url-pattern>/myurl</url-pattern>
-  </servlet-mapping>
   <listener>
     <listener-class>
       org.springframework.web.context.ContextLoaderListener
@@ -76,15 +57,4 @@
      org.springframework.web.context.request.RequestContextListener
     </listener-class>
   </listener>
-  <welcome-file-list>
-    <welcome-file>index.xhtml</welcome-file>
-  </welcome-file-list>
-  <error-page>
-    <error-code>403</error-code>
-    <location>/error403.xhtml</location>
-  </error-page>
-  <error-page>
-    <error-code>500</error-code>
-    <location>/error500.xhtml</location>
-  </error-page>
 </web-app>

@@ -157,6 +157,7 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 	@Override
 	public void write(final Collection<Serializable> events) throws IOException {
 		preconditionService.requiresFalse(IOException.class, "OutputEventStream is closed.", isClosed);
+		preconditionService.requiresNotNull("Events are required.", events);
 
 		this.events.addAll(events);
 	}
@@ -164,6 +165,7 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 	@Override
 	public void write(final Serializable event) throws IOException {
 		preconditionService.requiresFalse(IOException.class, "OutputEventStream is closed.", isClosed);
+		preconditionService.requiresNotNull("Event is required.", event);
 
 		this.events.add(event);
 	}
@@ -171,6 +173,7 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 	@Override
 	public void write(final Serializable[] events) throws IOException {
 		preconditionService.requiresFalse(IOException.class, "OutputEventStream is closed.", isClosed);
+		preconditionService.requiresNotNull("Events are required.", events);
 
 		this.events.addAll(Arrays.asList(events));
 	}

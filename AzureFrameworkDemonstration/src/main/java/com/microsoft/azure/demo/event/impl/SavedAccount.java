@@ -7,8 +7,8 @@ import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 public class SavedAccount implements SnapshotEvent {
 	private static final long serialVersionUID = 1L;
 	private BigDecimal balance;
-	
-	public SavedAccount(){
+
+	public SavedAccount() {
 	}
 
 	public SavedAccount(final BigDecimal balance) {

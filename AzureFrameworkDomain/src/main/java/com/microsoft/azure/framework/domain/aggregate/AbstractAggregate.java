@@ -33,6 +33,8 @@ public abstract class AbstractAggregate implements Aggregate {
 
 	@Override
 	public final Boolean apply(final List<Event> events) {
+		preconditionService.requiresNotNull("Events are required.", events);
+		
 		Long count = 0L;
 		Long offset = 0L;
 		try {
@@ -82,6 +84,8 @@ public abstract class AbstractAggregate implements Aggregate {
 
 	@Override
 	public final Boolean compensate(final List<Event> events) {
+		preconditionService.requiresNotNull("Events are required.", events);
+		
 		try {
 			for (final Serializable event : events) {
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
@@ -100,6 +104,8 @@ public abstract class AbstractAggregate implements Aggregate {
 	@SuppressWarnings("unchecked")
 	@Override
 	public final List<Event> decide(final Command command) {
+		preconditionService.requiresNotNull("Command is required.", command);
+		
 		try {
 			if (deleted) {
 				return EMPTY;

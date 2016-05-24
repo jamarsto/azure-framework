@@ -17,27 +17,37 @@ public final class Account extends AbstractAggregate {
 	private BigDecimal balance;
 
 	public Boolean apply(final CreatedAccount event) {
+		preconditionService.requiresNotNull("Event is required.", event);
+		
 		balance = event.getBalance();
 		return Boolean.TRUE;
 	}
 
 	public Boolean apply(final DepositedFunds event) {
+		preconditionService.requiresNotNull("Event is required.", event);
+		
 		balance = balance.add(event.getAmount());
 		return Boolean.TRUE;
 	}
 
 	public Boolean apply(final SavedAccount event) {
+		preconditionService.requiresNotNull("Event is required.", event);
+		
 		balance = event.getBalance();
 		return Boolean.TRUE;
 	}
 
 	public List<Event> decide(final CreateAccountCommand command) {
+		preconditionService.requiresNotNull("Command is required.", command);
+		
 		final List<Event> results = new ArrayList<Event>();
 		results.add(new CreatedAccount());
 		return results;
 	}
 
 	public List<Event> decide(final DepositFundsCommand command) {
+		preconditionService.requiresNotNull("Command is required.", command);
+		
 		final List<Event> results = new ArrayList<Event>();
 		results.add(new DepositedFunds(command.getAmount()));
 		return results;

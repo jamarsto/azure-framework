@@ -16,6 +16,7 @@ import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.impl.EventEntry;
 import com.microsoft.azure.framework.eventbus.EventBus;
 import com.microsoft.azure.framework.eventbus.EventBusConfiguration;
+import com.microsoft.azure.framework.precondition.PreconditionService;
 import com.microsoft.windowsazure.Configuration;
 import com.microsoft.windowsazure.exception.ServiceException;
 import com.microsoft.windowsazure.services.servicebus.ServiceBusConfiguration;
@@ -26,6 +27,8 @@ import com.microsoft.windowsazure.services.servicebus.models.TopicInfo;
 
 @Component
 public final class SimpleEventBus implements EventBus {
+	@Autowired
+	private PreconditionService preconditionService;
 	@Autowired
 	private EventBusConfiguration eventBusConfiguration;
 
@@ -43,6 +46,9 @@ public final class SimpleEventBus implements EventBus {
 
 	@Override
 	public void publish(final Aggregate aggregate, final List<Event> events) {
+		preconditionService.requiresNotNull("Aggregate is required.", aggregate);
+		preconditionService.requiresNotNull("Events are required.", aggregate);
+		
 		final Configuration config = ServiceBusConfiguration.configureWithSASAuthentication(
 				eventBusConfiguration.getServiceName(), "RootManageSharedAccessKey",
 				System.getenv(eventBusConfiguration.getSecretName()), ".servicebus.windows.net");
