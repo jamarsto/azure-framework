@@ -1,6 +1,7 @@
 package com.microsoft.azure.demo.event.impl;
 
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 
 import com.microsoft.azure.framework.domain.event.Event;
 
@@ -12,6 +13,8 @@ public class DepositedFunds implements Event {
 	}
 
 	public DepositedFunds(final BigDecimal amount) {
+		if(amount == null) throw new InvalidParameterException("Amount is required.");
+
 		this.amount = amount;
 	}
 
