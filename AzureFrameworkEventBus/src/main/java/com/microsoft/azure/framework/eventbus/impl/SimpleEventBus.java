@@ -63,7 +63,8 @@ public final class SimpleEventBus implements EventBus {
 			final ObjectMapper mapper = new ObjectMapper();
 			final String eventsString = mapper.writeValueAsString(eventEntries);
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
-			message.setProperty("version", aggregate.getVersion() + 1L);
+			message.setProperty("fromVersion", aggregate.getVersion() + 1L);
+			message.setProperty("toVersion", aggregate.getVersion() + eventEntries.size());
 			service.sendTopicMessage(topicPath, message);
 		} catch (final ServiceException | WebApplicationException e) {
 			throw new AggregateException(e.getMessage(), e);
