@@ -27,6 +27,19 @@ public final class SimpleEventBus implements EventBus {
 	@Autowired
 	private EventBusConfiguration eventBusConfiguration;
 
+	private void createQueue(final ServiceBusContract service, final String topicPath, final TopicInfo topicInfo) {
+		try {
+			if (service.getTopic(topicPath) == null) {
+			}
+		} catch (final ServiceException e) {
+			try {
+				service.createTopic(topicInfo);
+			} catch (final ServiceException se) {
+				throw new AggregateException(se.getMessage(), se);
+			}
+		}
+	}
+
 	@Override
 	public void publish(final Aggregate aggregate, final List<Event> events) {
 		final Configuration config = ServiceBusConfiguration.configureWithSASAuthentication(
@@ -35,12 +48,15 @@ public final class SimpleEventBus implements EventBus {
 		final ServiceBusContract service = ServiceBusService.create(config);
 		final String topicPath = aggregate.getClass().getName();
 		final TopicInfo topicInfo = new TopicInfo(topicPath);
+		createQueue(service, topicPath, topicInfo);
+		publish(aggregate, events, service, topicPath);
+	}
+
+	private void publish(final Aggregate aggregate, final List<Event> events, final ServiceBusContract service,
+			final String topicPath) {
 		try {
-			if (service.getTopic(topicPath) == null) {
-				service.createTopic(topicInfo);
-			}
 			final List<EventEntry> eventEntries = new ArrayList<EventEntry>();
-			for(final Event event : events) {
+			for (final Event event : events) {
 				eventEntries.add(new EventEntry(event));
 			}
 			final ObjectMapper mapper = new ObjectMapper();
@@ -48,8 +64,8 @@ public final class SimpleEventBus implements EventBus {
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
 			message.setProperty("version", aggregate.getVersion() + 1L);
 			service.sendTopicMessage(topicPath, message);
-		} catch (final ServiceException e) {
-			throw new AggregateException(e.getMessage(), e);
+		} catch (final ServiceException se) {
+			throw new AggregateException(se.getMessage(), se);
 		} catch (final JsonProcessingException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
