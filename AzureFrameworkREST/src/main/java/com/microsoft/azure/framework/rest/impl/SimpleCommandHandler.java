@@ -64,8 +64,6 @@ public class SimpleCommandHandler implements CommandHandler {
 			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
 					.build();
 		} catch (final RuntimeException e) {
-			System.out.println(json);
-			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.RUNTIME, e.getMessage()))
 					.build();
 		}
