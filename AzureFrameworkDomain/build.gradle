@@ -28,6 +28,7 @@ install {
 
 dependencies {
     compile 'com-microsoft-azure:azure-framework-command:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-event:1.0.0'
 
     testCompile 'junit:junit:4.12'
 }
