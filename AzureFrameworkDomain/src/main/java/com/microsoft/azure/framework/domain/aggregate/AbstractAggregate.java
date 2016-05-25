@@ -22,6 +22,7 @@ public abstract class AbstractAggregate implements Aggregate {
 	private static final List<Event> EMPTY = Collections.unmodifiableList(new ArrayList<Event>());
 	@Autowired
 	private AutowireCapableBeanFactory autowireBeanFactory;
+	private Boolean created = Boolean.FALSE;
 	private Boolean deleted = Boolean.FALSE;
 	private final List<Event> events = new ArrayList<Event>();
 	private UUID id;
@@ -34,7 +35,7 @@ public abstract class AbstractAggregate implements Aggregate {
 	@Override
 	public final Boolean apply(final List<Event> events) {
 		preconditionService.requiresNotNull("Events are required.", events);
-		
+
 		Long count = 0L;
 		Long offset = 0L;
 		try {
@@ -45,6 +46,9 @@ public abstract class AbstractAggregate implements Aggregate {
 			for (final Serializable event : events) {
 				count++;
 				localVersion++;
+				if (created && event instanceof CreatedEvent) {
+					return Boolean.FALSE;
+				}
 				if (deleted) {
 					return Boolean.FALSE;
 				}
@@ -52,6 +56,9 @@ public abstract class AbstractAggregate implements Aggregate {
 						event);
 				if (result.equals(Boolean.FALSE)) {
 					return Boolean.FALSE;
+				}
+				if (event instanceof CreatedEvent) {
+					created = Boolean.TRUE;
 				}
 				if (event instanceof SnapshotEvent) {
 					lastSnapshot = localVersion;
@@ -85,7 +92,7 @@ public abstract class AbstractAggregate implements Aggregate {
 	@Override
 	public final Boolean compensate(final List<Event> events) {
 		preconditionService.requiresNotNull("Events are required.", events);
-		
+
 		try {
 			for (final Serializable event : events) {
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
@@ -105,7 +112,7 @@ public abstract class AbstractAggregate implements Aggregate {
 	@Override
 	public final List<Event> decide(final Command command) {
 		preconditionService.requiresNotNull("Command is required.", command);
-		
+
 		try {
 			if (deleted) {
 				return EMPTY;

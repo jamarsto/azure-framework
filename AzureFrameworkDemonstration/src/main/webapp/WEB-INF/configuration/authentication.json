@@ -1,7 +1,9 @@
 {
   "exclusionUriPatterns": [
     "/",
-    "/index.xhtml",
+    "/index.xhtml"
+  ],
+  "serviceUriPatterns": [
     "/rest/*"
   ],
   "authorisationUriPatterns": [
