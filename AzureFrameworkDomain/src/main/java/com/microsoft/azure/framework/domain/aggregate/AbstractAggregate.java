@@ -29,7 +29,7 @@ public abstract class AbstractAggregate implements Aggregate {
 	private Long lastSnapshot = 0L;
 	@Autowired
 	protected PreconditionService preconditionService;
-	private Long snapshotInterval = 10L;
+	private Long snapshotInterval = 100L;
 	private Long version = 0L;
 
 	@Override
@@ -49,6 +49,9 @@ public abstract class AbstractAggregate implements Aggregate {
 				if (created && event instanceof CreatedEvent) {
 					return Boolean.FALSE;
 				}
+				if(!created && !(event instanceof CreatedEvent)) {
+					return Boolean.FALSE;
+				}
 				if (deleted) {
 					return Boolean.FALSE;
 				}
@@ -57,10 +60,8 @@ public abstract class AbstractAggregate implements Aggregate {
 				if (result.equals(Boolean.FALSE)) {
 					return Boolean.FALSE;
 				}
-				if (event instanceof CreatedEvent) {
-					created = Boolean.TRUE;
-				}
 				if (event instanceof SnapshotEvent) {
+					created = Boolean.TRUE;
 					lastSnapshot = localVersion;
 					offset = count;
 				}
@@ -167,5 +168,9 @@ public abstract class AbstractAggregate implements Aggregate {
 		events.clear();
 	}
 
+	protected final void setSnapshotInterval(final Long snapshotInterval) {
+		this.snapshotInterval = snapshotInterval;
+	}
+	
 	protected abstract SnapshotEvent snapshot();
 }

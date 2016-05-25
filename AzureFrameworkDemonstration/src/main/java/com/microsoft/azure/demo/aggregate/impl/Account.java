@@ -15,6 +15,10 @@ import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 
 public final class Account extends AbstractAggregate {
 	private BigDecimal balance;
+	
+	public Account() {
+		setSnapshotInterval(10L);
+	}
 
 	public Boolean apply(final CreatedAccount event) {
 		preconditionService.requiresNotNull("Event is required.", event);
