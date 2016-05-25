@@ -20,24 +20,24 @@
 
 	<tx:annotation-driven transaction-manager="txManager" />
 
-	<bean id="commandServiceConfiguration" class="com.microsoft.azure.framework.rest.impl.SimpleCommandServiceConfiguration">
+	<bean id="commandServiceConfiguration" class="com.microsoft.azure.framework.rest.configuration.impl.SimpleCommandServiceConfiguration">
 		<property name="commandMap">
 			<map>
 				<entry key="CreateAccount"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.command.impl.CreateAccountCommand" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.command.impl.CreateAccount" />
 				<entry key="DepositFunds"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.command.impl.DepositFundsCommand" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.command.impl.DepositFunds" />
 			</map>
 		</property>
 	</bean>
 
-	<bean id="domainServiceConfiguration" class="com.microsoft.azure.framework.domain.service.impl.SimpleDomainServiceConfiguration">
+	<bean id="domainServiceConfiguration" class="com.microsoft.azure.framework.domain.service.configuration.impl.SimpleDomainServiceConfiguration">
 		<property name="partitionID" value="banking"/>
 		<property name="routingMap">
 			<map>
-				<entry key="com.microsoft.azure.demo.command.impl.CreateAccountCommand"
+				<entry key="com.microsoft.azure.demo.command.impl.CreateAccount"
 					value-type="java.lang.Class" value="com.microsoft.azure.demo.aggregate.impl.Account" />
-				<entry key="com.microsoft.azure.demo.command.impl.DepositFundsCommand"
+				<entry key="com.microsoft.azure.demo.command.impl.DepositFunds"
 					value-type="java.lang.Class" value="com.microsoft.azure.demo.aggregate.impl.Account" />
 			</map>
 		</property>
@@ -57,7 +57,7 @@
 		</property>
 	</bean>
 	
-	<bean id="eventBusConfiguration" class="com.microsoft.azure.framework.eventbus.impl.SimpleEventBusConfiguration">
+	<bean id="eventBusConfiguration" class="com.microsoft.azure.framework.eventbus.configuration.impl.SimpleEventBusConfiguration">
 		<property name="serviceName" value="jm-java" />
 		<property name="secretName" value="BUS_SECRET" />
 	</bean>

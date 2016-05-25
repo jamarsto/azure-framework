@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.microsoft.azure.demo.command.impl.CreateAccountCommand;
-import com.microsoft.azure.demo.command.impl.DepositFundsCommand;
+import com.microsoft.azure.demo.command.impl.CreateAccount;
+import com.microsoft.azure.demo.command.impl.DepositFunds;
 import com.microsoft.azure.demo.event.impl.CreatedAccount;
 import com.microsoft.azure.demo.event.impl.DepositedFunds;
 import com.microsoft.azure.demo.event.impl.SavedAccount;
@@ -37,7 +37,7 @@ public final class Account extends AbstractAggregate {
 		return Boolean.TRUE;
 	}
 
-	public List<Event> decide(final CreateAccountCommand command) {
+	public List<Event> decide(final CreateAccount command) {
 		preconditionService.requiresNotNull("Command is required.", command);
 		
 		final List<Event> results = new ArrayList<Event>();
@@ -45,7 +45,7 @@ public final class Account extends AbstractAggregate {
 		return results;
 	}
 
-	public List<Event> decide(final DepositFundsCommand command) {
+	public List<Event> decide(final DepositFunds command) {
 		preconditionService.requiresNotNull("Command is required.", command);
 		
 		final List<Event> results = new ArrayList<Event>();

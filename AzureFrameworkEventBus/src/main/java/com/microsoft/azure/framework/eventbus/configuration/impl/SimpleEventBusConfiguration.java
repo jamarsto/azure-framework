@@ -1,10 +1,7 @@
-package com.microsoft.azure.framework.eventbus.impl;
+package com.microsoft.azure.framework.eventbus.configuration.impl;
 
-import org.springframework.stereotype.Component;
+import com.microsoft.azure.framework.eventbus.configuration.EventBusConfiguration;
 
-import com.microsoft.azure.framework.eventbus.EventBusConfiguration;
-
-@Component("eventBusConfiguration")
 public final class SimpleEventBusConfiguration implements EventBusConfiguration {
 	private String serviceName;
 	private String secretName;

@@ -15,7 +15,7 @@ import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.impl.EventEntry;
 import com.microsoft.azure.framework.eventbus.EventBus;
-import com.microsoft.azure.framework.eventbus.EventBusConfiguration;
+import com.microsoft.azure.framework.eventbus.configuration.EventBusConfiguration;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 import com.microsoft.windowsazure.Configuration;
 import com.microsoft.windowsazure.exception.ServiceException;
@@ -69,9 +69,10 @@ public final class SimpleEventBus implements EventBus {
 			final ObjectMapper mapper = new ObjectMapper();
 			final String eventsString = mapper.writeValueAsString(eventEntries);
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
+			message.setProperty("aggregateClassName", aggregate.getClass().getName());
+			message.setProperty("aggregateId", aggregate.getID());
 			message.setProperty("fromVersion", aggregate.getVersion() + 1L);
 			message.setProperty("toVersion", aggregate.getVersion() + eventEntries.size());
-			message.setProperty("aggregateClassName", aggregate.getClass().getName());
 			service.sendTopicMessage(topicPath, message);
 		} catch (final ServiceException | WebApplicationException e) {
 			throw new AggregateException(e.getMessage(), e);

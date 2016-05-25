@@ -1,4 +1,4 @@
-package com.microsoft.azure.framework.eventbus;
+package com.microsoft.azure.framework.eventbus.configuration;
 
 public interface EventBusConfiguration {
 

@@ -16,6 +16,7 @@ import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
+import com.microsoft.azure.framework.domain.service.configuration.DomainServiceConfiguration;
 import com.microsoft.azure.framework.eventbus.EventBus;
 import com.microsoft.azure.framework.eventstore.InputEventStream;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;

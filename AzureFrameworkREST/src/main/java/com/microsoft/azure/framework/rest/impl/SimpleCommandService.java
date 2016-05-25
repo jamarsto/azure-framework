@@ -11,7 +11,7 @@ import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.command.CommandException;
 import com.microsoft.azure.framework.precondition.PreconditionService;
 import com.microsoft.azure.framework.rest.CommandService;
-import com.microsoft.azure.framework.rest.CommandServiceConfiguration;
+import com.microsoft.azure.framework.rest.configuration.CommandServiceConfiguration;
 
 @Component
 public class SimpleCommandService implements CommandService {

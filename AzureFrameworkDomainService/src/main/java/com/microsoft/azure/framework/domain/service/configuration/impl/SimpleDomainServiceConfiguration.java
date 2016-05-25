@@ -1,15 +1,13 @@
-package com.microsoft.azure.framework.domain.service.impl;
+package com.microsoft.azure.framework.domain.service.configuration.impl;
 
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import com.microsoft.azure.framework.domain.service.DomainServiceConfiguration;
+import com.microsoft.azure.framework.domain.service.configuration.DomainServiceConfiguration;
 import com.microsoft.azure.framework.eventstore.InputEventStream;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
 
-@Component("domainServiceConfiguration")
 public final class SimpleDomainServiceConfiguration implements DomainServiceConfiguration {
 	@Autowired
 	private InputEventStream.BuilderFactory inputEventStreamBuilderFactory;
