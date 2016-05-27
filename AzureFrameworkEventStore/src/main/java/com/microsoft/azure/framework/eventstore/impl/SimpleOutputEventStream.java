@@ -9,10 +9,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.RollbackException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
+import com.microsoft.azure.framework.eventstore.ConcurrentUpdateException;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
 import com.microsoft.azure.framework.eventstore.persistence.EventSet;
 import com.microsoft.azure.framework.eventstore.persistence.EventSetRepository;
@@ -135,6 +139,12 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 			eventSetBuilder.buildFromVersion(fromVersion);
 			events.clear();
 		} catch (final RuntimeException e) {
+			if(e instanceof RollbackException && e.getCause() instanceof EntityExistsException) {
+				throw new ConcurrentUpdateException("Concurrent Update Exception");
+			}
+			if(e instanceof EntityExistsException) {
+				throw new ConcurrentUpdateException("Concurrent Update Exception");
+			}
 			throw new IOException(e.getMessage(), e);
 		}
 	}

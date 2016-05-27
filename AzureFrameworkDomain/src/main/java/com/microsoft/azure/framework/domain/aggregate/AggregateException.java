@@ -1,6 +1,6 @@
 package com.microsoft.azure.framework.domain.aggregate;
 
-public final class AggregateException extends RuntimeException {
+public class AggregateException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	public AggregateException() {

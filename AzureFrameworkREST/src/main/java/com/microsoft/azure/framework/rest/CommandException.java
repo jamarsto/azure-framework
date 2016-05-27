@@ -1,4 +1,4 @@
-package com.microsoft.azure.framework.command;
+package com.microsoft.azure.framework.rest;
 
 public final class CommandException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

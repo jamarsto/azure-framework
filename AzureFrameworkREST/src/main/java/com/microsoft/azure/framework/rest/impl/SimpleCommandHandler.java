@@ -23,6 +23,9 @@ import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.command.CommandException;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
+import com.microsoft.azure.framework.domain.aggregate.AlreadyExistsException;
+import com.microsoft.azure.framework.domain.aggregate.DoesNotExistException;
+import com.microsoft.azure.framework.domain.service.ConcurrentUpdatePersistenceException;
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
 import com.microsoft.azure.framework.precondition.PreconditionException;
 import com.microsoft.azure.framework.rest.CommandHandler;
@@ -53,6 +56,9 @@ public class SimpleCommandHandler implements CommandHandler {
 			final Command command = commandService.createCommand(commandName, json);
 			commandProcessor.doCommand(command);
 			return Response.ok(new UniqueID(command.getAggregateId())).build();
+		} catch (final AlreadyExistsException | DoesNotExistException e) {
+			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.AGGREGATE_EXISTANCE, e.getMessage()))
+					.build();
 		} catch (final AggregateException e) {
 			LOGGER.error(e.getMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.AGGREGATE, e.getMessage()))
@@ -64,11 +70,13 @@ public class SimpleCommandHandler implements CommandHandler {
 		} catch (final DomainServiceException e) {
 			LOGGER.info(e.getMessage(), e);
 			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.DOMAIN_SERVICE, e.getMessage())).build();
+		} catch (final ConcurrentUpdatePersistenceException e) {
+			return Response.status(Status.BAD_REQUEST)
+					.entity(new Error(Error.PERSISTENCE_CONCURRENT_UPDATE, e.getMessage())).build();
 		} catch (final PersistenceException e) {
-			LOGGER.info(e.getMessage(), e);
-			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.PERSISTENCE, e.getMessage())).build();
+			LOGGER.error(e.getMessage(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.PERSISTENCE, e.getMessage())).build();
 		} catch (final PreconditionException e) {
-			LOGGER.info(e.getMessage(), e);
 			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
 					.build();
 		} catch (final RuntimeException e) {

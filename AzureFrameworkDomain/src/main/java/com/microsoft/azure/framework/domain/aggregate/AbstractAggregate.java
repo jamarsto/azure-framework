@@ -39,21 +39,18 @@ public abstract class AbstractAggregate implements Aggregate {
 		Long count = 0L;
 		Long offset = 0L;
 		try {
-			if (lastSnapshot == 0L && !events.isEmpty() && !(events.get(0) instanceof SnapshotEvent)) {
-				return Boolean.FALSE;
-			}
 			Long localVersion = version;
 			for (final Serializable event : events) {
 				count++;
 				localVersion++;
 				if (created && event instanceof CreatedEvent) {
-					return Boolean.FALSE;
+					throw new AlreadyExistsException("Aggregate already exists");
 				}
 				if(!created && !(event instanceof CreatedEvent)) {
-					return Boolean.FALSE;
+					throw new DoesNotExistException("Aggregate does not exist");
 				}
 				if (deleted) {
-					return Boolean.FALSE;
+					throw new DoesNotExistException("Aggregate does not exist");
 				}
 				final Boolean result = (Boolean) this.getClass().getMethod("apply", event.getClass()).invoke(this,
 						event);
@@ -69,7 +66,7 @@ public abstract class AbstractAggregate implements Aggregate {
 					deleted = Boolean.TRUE;
 				}
 			}
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+		} catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
@@ -102,7 +99,7 @@ public abstract class AbstractAggregate implements Aggregate {
 					return Boolean.FALSE;
 				}
 			}
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+		} catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}

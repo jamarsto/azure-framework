@@ -1,5 +1,6 @@
 package com.microsoft.azure.framework.eventbus.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import javax.ws.rs.WebApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
@@ -32,7 +32,11 @@ public final class SimpleEventBus implements EventBus {
 	@Autowired
 	private EventBusConfiguration eventBusConfiguration;
 
-	private void createQueue(final ServiceBusContract service, final String topicPath, final TopicInfo topicInfo) {
+	private ServiceBusContract getTopicService(final String serviceName, final String secretName,
+			final String topicPath, final TopicInfo topicInfo) {
+		final Configuration config = ServiceBusConfiguration.configureWithSASAuthentication(serviceName,
+				"RootManageSharedAccessKey", System.getenv(secretName), ".servicebus.windows.net");
+		final ServiceBusContract service = ServiceBusService.create(config);
 		try {
 			service.getTopic(topicPath);
 		} catch (final ServiceException | WebApplicationException e) {
@@ -42,21 +46,33 @@ public final class SimpleEventBus implements EventBus {
 				throw new AggregateException(se.getMessage(), se);
 			}
 		}
+		return service;
 	}
 
 	@Override
 	public void publish(final Aggregate aggregate, final List<Event> events) {
 		preconditionService.requiresNotNull("Aggregate is required.", aggregate);
 		preconditionService.requiresNotNull("Events are required.", aggregate);
-		
-		final Configuration config = ServiceBusConfiguration.configureWithSASAuthentication(
-				eventBusConfiguration.getServiceName(), "RootManageSharedAccessKey",
-				System.getenv(eventBusConfiguration.getSecretName()), ".servicebus.windows.net");
-		final ServiceBusContract service = ServiceBusService.create(config);
+
 		final String topicPath = aggregate.getClass().getName();
 		final TopicInfo topicInfo = new TopicInfo(topicPath);
-		createQueue(service, topicPath, topicInfo);
-		publish(aggregate, events, service, topicPath);
+
+		try {
+			final ServiceBusContract service = getTopicService(eventBusConfiguration.getServiceName(),
+					eventBusConfiguration.getSecretName(), topicPath, topicInfo);
+			publish(aggregate, events, service, topicPath);
+		} catch (final AggregateException e) {
+			if (eventBusConfiguration.getBackupServiceName() != null
+					&& eventBusConfiguration.getBackupSecretName() != null) {
+				if (e.getCause() instanceof ServiceException || e.getCause() instanceof WebApplicationException) {
+					final ServiceBusContract service = getTopicService(eventBusConfiguration.getBackupServiceName(),
+							eventBusConfiguration.getBackupSecretName(), topicPath, topicInfo);
+					publish(aggregate, events, service, topicPath);
+					return;
+				}
+			}
+			throw e;
+		}
 	}
 
 	private void publish(final Aggregate aggregate, final List<Event> events, final ServiceBusContract service,
@@ -76,7 +92,7 @@ public final class SimpleEventBus implements EventBus {
 			service.sendTopicMessage(topicPath, message);
 		} catch (final ServiceException | WebApplicationException e) {
 			throw new AggregateException(e.getMessage(), e);
-		} catch (final JsonProcessingException e) {
+		} catch (final IOException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
 	}

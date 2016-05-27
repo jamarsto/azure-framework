@@ -18,6 +18,7 @@ import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.service.configuration.DomainServiceConfiguration;
 import com.microsoft.azure.framework.eventbus.EventBus;
+import com.microsoft.azure.framework.eventstore.ConcurrentUpdateException;
 import com.microsoft.azure.framework.eventstore.InputEventStream;
 import com.microsoft.azure.framework.eventstore.OutputEventStream;
 
@@ -40,7 +41,7 @@ public abstract class AbstractDomainService implements DomainService {
 			autowireBeanFactory.autowireBean(aggregate);
 			initialize(aggregate, command.getAggregateId());
 			return aggregate;
-		} catch (InstantiationException | IllegalAccessException | BeansException e) {
+		} catch (final InstantiationException | IllegalAccessException | BeansException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
 	}
@@ -57,7 +58,7 @@ public abstract class AbstractDomainService implements DomainService {
 				return 0L;
 			}
 			return ies.getFromVersion();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
 	}
@@ -77,7 +78,7 @@ public abstract class AbstractDomainService implements DomainService {
 						(List<Event>) (List<?>) ies.readAll());
 				aggregate.commit();
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
 	}
@@ -87,7 +88,7 @@ public abstract class AbstractDomainService implements DomainService {
 			final Method method = AbstractAggregate.class.getDeclaredMethod("initialize", UUID.class, Long.class);
 			method.setAccessible(true);
 			method.invoke(aggregate, id, 0L);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+		} catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
@@ -98,7 +99,7 @@ public abstract class AbstractDomainService implements DomainService {
 			final Method method = AbstractAggregate.class.getDeclaredMethod("initialize", UUID.class, Long.class);
 			method.setAccessible(true);
 			method.invoke(aggregate, aggregate.getID(), fromVersion);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+		} catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			throw new AggregateException(e.getMessage(), e);
 		}
@@ -114,11 +115,13 @@ public abstract class AbstractDomainService implements DomainService {
 		try (final OutputEventStream oes = outputEventStreamBuilder.build()) {
 			oes.write((List<Serializable>) (List<?>) aggregate.getEvents());
 			oes.flush(UUID.randomUUID());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new PersistenceException(e.getMessage(), e);
+		} catch (final ConcurrentUpdateException e) {
+			throw new ConcurrentUpdatePersistenceException(e.getMessage(), e);
 		}
 	}
-	
+
 	protected final void publishEvents(final Aggregate aggregate, final List<Event> events) {
 		eventBus.publish(aggregate, events);
 	}
@@ -132,7 +135,7 @@ public abstract class AbstractDomainService implements DomainService {
 	public final void setAutowireCapableBeanFactory(final AutowireCapableBeanFactory autowireBeanFactory) {
 		this.autowireBeanFactory = autowireBeanFactory;
 	}
-	
+
 	@Autowired
 	public final void setEventBus(final EventBus eventBus) {
 		this.eventBus = eventBus;
