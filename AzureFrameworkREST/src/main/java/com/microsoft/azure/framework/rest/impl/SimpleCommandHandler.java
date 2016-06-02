@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.microsoft.azure.framework.command.Command;
-import com.microsoft.azure.framework.command.CommandException;
 import com.microsoft.azure.framework.command.processor.CommandProcessor;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.aggregate.AlreadyExistsException;
@@ -28,6 +27,7 @@ import com.microsoft.azure.framework.domain.aggregate.DoesNotExistException;
 import com.microsoft.azure.framework.domain.service.ConcurrentUpdatePersistenceException;
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
 import com.microsoft.azure.framework.precondition.PreconditionException;
+import com.microsoft.azure.framework.rest.CommandException;
 import com.microsoft.azure.framework.rest.CommandHandler;
 import com.microsoft.azure.framework.rest.CommandService;
 

@@ -1,12 +1,10 @@
 package com.microsoft.azure.framework.eventbus.configuration;
 
+import java.util.List;
+
 public interface EventBusConfiguration {
 	
-	String getBackupServiceName();
-	
-	String getBackupSecretName();
+	String getPartitionID();
 
-	String getServiceName();
-	
-	String getSecretName();
+	List<Namespace> getNamespaces();
 }

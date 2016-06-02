@@ -28,21 +28,21 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 		@NamedQuery(name = "EventStoreEntry.classNameAndVersionRange", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.eventClassName = :eventClassName AND e.version >= :fromVersion AND e.version <= :toVersion "
-				+ "ORDER BY e.version ASC"),
+				+ "ORDER BY e.version"),
 		@NamedQuery(name = "EventStoreEntry.classNameAndChangeSetID", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.eventClassName = :eventClassName AND e.changeSetID = :changeSetID "
-				+ "ORDER BY e.version ASC"),
+				+ "ORDER BY e.version"),
 		@NamedQuery(name = "EventStoreEntry.changeSetID", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.changeSetID = :changeSetID "
-				+ "ORDER BY e.version ASC"),
+				+ "ORDER BY e.version"),
 		@NamedQuery(name = "EventStoreEntry.versionRange", query = "SELECT e FROM EventStoreEntry e "
 				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.version >= :fromVersion AND e.version <= :toVersion " 
-				+ "ORDER BY e.version ASC") })
+				+ "ORDER BY e.version") })
 @Entity
-@Table(name = "EVENT_STORE_ENTRY")
+@Table(name = "EVENT_STORE")
 public class EventStoreEntry {
 	
 	public static final class Builder {
