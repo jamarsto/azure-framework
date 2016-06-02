@@ -30,7 +30,7 @@ public final class SimpleDomainService extends AbstractDomainService {
 			throw new DomainServiceException("Aggregate refused to apply events.");
 		}
 		populateStreamFromAggregate(aggregate);
-		publishEvents(aggregate, events);
+		publishEvents(aggregate);
 		aggregate.commit();
 	}
 }

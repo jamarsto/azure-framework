@@ -38,7 +38,7 @@ public final class SimpleEventBus implements EventBus {
 	private EventBusConfiguration eventBusConfiguration;
 
 	private ServiceBusContract getTopicService(final String serviceName, final String secretName,
-			final String topicPath, final TopicInfo topicInfo) {
+			final String topicPath) {
 		final Configuration config = ServiceBusConfiguration.configureWithSASAuthentication(serviceName,
 				"RootManageSharedAccessKey", secretName, ".servicebus.windows.net");
 		final ServiceBusContract service = ServiceBusService.create(config);
@@ -46,7 +46,7 @@ public final class SimpleEventBus implements EventBus {
 			service.getTopic(topicPath);
 		} catch (final ServiceException | WebApplicationException e) {
 			try {
-				service.createTopic(topicInfo);
+				service.createTopic(new TopicInfo(topicPath));
 			} catch (final ServiceException | WebApplicationException se) {
 				throw new AggregateException(se.getMessage(), se);
 			}
@@ -55,20 +55,19 @@ public final class SimpleEventBus implements EventBus {
 	}
 
 	@Override
-	public void publish(final Aggregate aggregate, final List<Event> events) {
+	public void publish(final Aggregate aggregate) {
 		preconditionService.requiresNotNull("Aggregate is required.", aggregate);
-		preconditionService.requiresNotNull("Events are required.", events);
-
-		publish(aggregate.getClass().getName(), aggregate.getID(), aggregate.getVersion(), events);
+		if (aggregate.getEvents() != null && !aggregate.getEvents().isEmpty()) {
+			publish(aggregate.getClass().getName(), aggregate.getID(), aggregate.getVersion(), aggregate.getEvents());
+		}
 	}
 
 	private void publish(final String bucketID, final UUID streamID, final Long version, final List<Event> events) {
-		final TopicInfo topicInfo = new TopicInfo(bucketID);
 		AggregateException lastException = null;
 		for (final Namespace namespace : eventBusConfiguration.getNamespaces()) {
 			try {
-				final ServiceBusContract service = getTopicService(namespace.getName(), namespace.getSecret(), bucketID,
-						topicInfo);
+				final ServiceBusContract service = getTopicService(namespace.getName(), namespace.getSecret(),
+						bucketID);
 				publish(bucketID, streamID, version, events, service);
 				return;
 			} catch (final AggregateException e) {

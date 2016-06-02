@@ -122,8 +122,8 @@ public abstract class AbstractDomainService implements DomainService {
 		}
 	}
 
-	protected final void publishEvents(final Aggregate aggregate, final List<Event> events) {
-		eventBus.publish(aggregate, events);
+	protected final void publishEvents(final Aggregate aggregate) {
+		eventBus.publish(aggregate);
 	}
 
 	@Autowired
