@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
@@ -94,6 +95,7 @@ public final class SimpleEventBus implements EventBus {
 		try {
 			final List<EventEntry> eventEntries = new ArrayList<EventEntry>();
 			final ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 			for (final Event event : events) {
 				eventEntries.add(new EventEntry(event.getClass().getName(), mapper.writeValueAsString(event)));
 			}
