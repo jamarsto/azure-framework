@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.domain.aggregate.AbstractAggregate;
 import com.microsoft.azure.framework.domain.aggregate.Aggregate;
 import com.microsoft.azure.framework.domain.aggregate.AggregateException;
+import com.microsoft.azure.framework.domain.event.AbstractEvent;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.service.configuration.DomainServiceConfiguration;
 import com.microsoft.azure.framework.eventbus.EventBus;
@@ -26,6 +28,7 @@ public abstract class AbstractDomainService implements DomainService {
 	private DomainServiceConfiguration domainServiceConfiguration;
 	private AutowireCapableBeanFactory autowireBeanFactory;
 	private EventBus eventBus;
+	private DateTimeService dateTimeService;
 
 	protected final void applyEvents(final String message, final Aggregate aggregate, final List<Event> events) {
 		final Boolean result = aggregate.apply(events);
@@ -112,6 +115,10 @@ public abstract class AbstractDomainService implements DomainService {
 		outputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
 				.buildBucketID(aggregate.getClass().getName()).buildStreamID(aggregate.getID())
 				.buildFromVersion(aggregate.getVersion() + 1L);
+		final Calendar dateTime = dateTimeService.getUTCDateTime();
+		for(final Event event : aggregate.getEvents()) {
+			((AbstractEvent)event).setCreatedDateTime(dateTime);
+		}
 		try (final OutputEventStream oes = outputEventStreamBuilder.build()) {
 			oes.write((List<Serializable>) (List<?>) aggregate.getEvents());
 			oes.flush(UUID.randomUUID());
@@ -139,5 +146,10 @@ public abstract class AbstractDomainService implements DomainService {
 	@Autowired
 	public final void setEventBus(final EventBus eventBus) {
 		this.eventBus = eventBus;
+	}
+	
+	@Autowired
+	public final void setDateTimeService(final DateTimeService dateTimeService) {
+		this.dateTimeService = dateTimeService;
 	}
 }

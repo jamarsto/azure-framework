@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.microsoft.azure.framework.eventstore.persistence.DeserializationException;
 import com.microsoft.azure.framework.eventstore.persistence.EventSet;
 import com.microsoft.azure.framework.eventstore.persistence.EventSetRepository;
@@ -116,6 +117,7 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 
 	private String serialize(final Serializable entry) {
 		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		try {
 			return mapper.writeValueAsString(entry);
 		} catch (JsonProcessingException e) {

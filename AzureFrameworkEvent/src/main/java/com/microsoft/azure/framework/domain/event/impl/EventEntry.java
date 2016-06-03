@@ -1,16 +1,14 @@
 package com.microsoft.azure.framework.domain.event.impl;
 
-import com.microsoft.azure.framework.domain.event.Event;
-
 public final class EventEntry {
 	private String eventClassName;
-	private Event event;
+	private String event;
 
 	public EventEntry() {
 	}
 
-	public EventEntry(final Event event) {
-		eventClassName = event.getClass().getName();
+	public EventEntry(final String eventClassName, final String event) {
+		this.eventClassName = eventClassName;
 		this.event = event;
 	}
 
@@ -18,7 +16,7 @@ public final class EventEntry {
 		return eventClassName;
 	}
 
-	public Event getEvent() {
+	public String getEvent() {
 		return event;
 	}
 }

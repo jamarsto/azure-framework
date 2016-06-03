@@ -38,8 +38,9 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 		preconditionService.requiresNotNull("From Version is required.", fromVersion);
 		preconditionService.requiresGE("From Version must be greater than or equal to zero.", fromVersion, 0L);
 		preconditionService.requiresNotNull("To Version is required.", toVersion);
-		preconditionService.requiresGE("To Version must be greater than or equal to From Version.", toVersion, fromVersion);
-		
+		preconditionService.requiresGE("To Version must be greater than or equal to From Version.", toVersion,
+				fromVersion);
+
 		if (filter.getName().equals(Serializable.class.getName())) {
 			final Query query = entityManager.createNamedQuery("EventStoreEntry.versionRange");
 			query.setParameter("partitionID", partitionID).setParameter("bucketID", bucketID)
@@ -73,7 +74,7 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 		preconditionService.requiresNotNull("Stream ID is required.", streamID);
 		preconditionService.requiresNotNull("Filter is required.", filter);
 		preconditionService.requiresNotNull("Change Set ID is required.", changeSetID);
-		
+
 		if (filter.getName().equals(Serializable.class.getName())) {
 			final Query query = entityManager.createNamedQuery("EventStoreEntry.changeSetID");
 			query.setParameter("partitionID", partitionID).setParameter("bucketID", bucketID)

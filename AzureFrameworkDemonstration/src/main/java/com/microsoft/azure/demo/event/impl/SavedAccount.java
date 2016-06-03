@@ -2,9 +2,10 @@ package com.microsoft.azure.demo.event.impl;
 
 import java.math.BigDecimal;
 
+import com.microsoft.azure.framework.domain.event.AbstractEvent;
 import com.microsoft.azure.framework.domain.event.SnapshotEvent;
 
-public class SavedAccount implements SnapshotEvent {
+public class SavedAccount extends AbstractEvent implements SnapshotEvent {
 	private static final long serialVersionUID = 1L;
 	private BigDecimal balance;
 
