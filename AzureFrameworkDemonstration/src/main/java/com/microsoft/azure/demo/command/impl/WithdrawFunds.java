@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import com.microsoft.azure.framework.command.AbstractCommand;
 
-public final class DepositFunds extends AbstractCommand {
+public final class WithdrawFunds extends AbstractCommand {
 	private UUID aggregateId;
 	private BigDecimal amount;
 
-	public DepositFunds() {
+	public WithdrawFunds() {
 	}
 
 	@Override

@@ -13,7 +13,6 @@ public final class SimpleDomainServiceConfiguration implements DomainServiceConf
 	private InputEventStream.BuilderFactory inputEventStreamBuilderFactory;
 	@Autowired
 	private OutputEventStream.BuilderFactory outputEventStreamBuilderFactory;
-	private String partitionID;
 	private Map<String, Class<?>> routingMap;
 	private Map<String, Class<?>> snapshotMap;
 
@@ -25,11 +24,6 @@ public final class SimpleDomainServiceConfiguration implements DomainServiceConf
 	@Override
 	public OutputEventStream.BuilderFactory getOutputEventStreamBuilderFactory() {
 		return outputEventStreamBuilderFactory;
-	}
-
-	@Override
-	public String getPartitionID() {
-		return partitionID;
 	}
 
 	@Override
@@ -52,11 +46,6 @@ public final class SimpleDomainServiceConfiguration implements DomainServiceConf
 	public void setOutputEventStreamBuilderFactory(
 			final OutputEventStream.BuilderFactory outputEventStreamBuilderFactory) {
 		this.outputEventStreamBuilderFactory = outputEventStreamBuilderFactory;
-	}
-
-	@Override
-	public void setPartitionID(final String partitionID) {
-		this.partitionID = partitionID;
 	}
 
 	@Override

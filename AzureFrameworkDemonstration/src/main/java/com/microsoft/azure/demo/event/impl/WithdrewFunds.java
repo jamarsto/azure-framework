@@ -6,14 +6,14 @@ import java.security.InvalidParameterException;
 import com.microsoft.azure.framework.domain.event.AbstractEvent;
 import com.microsoft.azure.framework.domain.event.Event;
 
-public class DepositedFunds extends AbstractEvent implements Event {
+public class WithdrewFunds extends AbstractEvent implements Event {
 	private static final long serialVersionUID = 1L;
 	private BigDecimal amount;
 
-	public DepositedFunds() {
+	public WithdrewFunds() {
 	}
 
-	public DepositedFunds(final BigDecimal amount) {
+	public WithdrewFunds(final BigDecimal amount) {
 		if(amount == null) throw new InvalidParameterException("Amount is required.");
 		if(amount.compareTo(new BigDecimal("0.00")) <= 0) throw new InvalidParameterException("Amount must be positive");
 

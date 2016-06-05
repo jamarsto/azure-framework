@@ -15,6 +15,12 @@
 	<jee:jndi-lookup id="event-store-unit"
 		jndi-name="java:jboss/persistence/event-store-unit-factory" />
 
+	<jee:jndi-lookup id="materialized-view-unit"
+		jndi-name="java:jboss/persistence/materialized-view-unit-factory" />
+
+	<jee:jndi-lookup id="managedThreadFactory"
+		jndi-name="java:jboss/ee/concurrency/factory/default" />
+
 	<bean id="txManager"
 		class="org.springframework.transaction.jta.JtaTransactionManager" />
 
@@ -34,7 +40,6 @@
 
 	<bean id="domainServiceConfiguration"
 		class="com.microsoft.azure.framework.domain.service.configuration.impl.SimpleDomainServiceConfiguration">
-		<property name="partitionID" value="banking" />
 		<property name="routingMap">
 			<map>
 				<entry key="com.microsoft.azure.demo.command.impl.CreateAccount"
@@ -60,18 +65,23 @@
 		</property>
 	</bean>
 
-	<bean id="eventBusConfiguration"
-		class="com.microsoft.azure.framework.eventbus.configuration.impl.SimpleEventBusConfiguration">
-		<property name="partitionID" value="banking" />
+	<bean id="azureServiceBusConfiguration"
+		class="com.microsoft.azure.framework.servicebus.configuration.impl.SimpleAzureServiceBusConfiguration">
 		<property name="namespaces">
 			<list>
-				<bean class="com.microsoft.azure.framework.eventbus.configuration.impl.SimpleNamespace">
-					<property name="name" value="#{systemEnvironment['PRIMARY_NAMESPACE_NAME']}" />
-					<property name="secret" value="#{systemEnvironment['PRIMARY_NAMESPACE_SECRET']}"/>
+				<bean
+					class="com.microsoft.azure.framework.servicebus.configuration.impl.SimpleNamespace">
+					<property name="name"
+						value="#{systemEnvironment['PRIMARY_NAMESPACE_NAME']}" />
+					<property name="secret"
+						value="#{systemEnvironment['PRIMARY_NAMESPACE_SECRET']}" />
 				</bean>
-				<bean class="com.microsoft.azure.framework.eventbus.configuration.impl.SimpleNamespace">
-					<property name="name" value="#{systemEnvironment['BACKUP_NAMESPACE_NAME']}" />
-					<property name="secret" value="#{systemEnvironment['BACKUP_NAMESPACE_SECRET']}"/>
+				<bean
+					class="com.microsoft.azure.framework.servicebus.configuration.impl.SimpleNamespace">
+					<property name="name"
+						value="#{systemEnvironment['BACKUP_NAMESPACE_NAME']}" />
+					<property name="secret"
+						value="#{systemEnvironment['BACKUP_NAMESPACE_SECRET']}" />
 				</bean>
 			</list>
 		</property>

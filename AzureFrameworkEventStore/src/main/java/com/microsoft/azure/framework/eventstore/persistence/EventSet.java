@@ -16,8 +16,6 @@ public interface EventSet {
 
 		Builder buildFromVersion(Long fromVersion);
 
-		Builder buildPartitionID(String partitionID);
-
 		Builder buildStreamID(UUID streamID);
 
 		Builder buildToVersion(Long toVersion);
@@ -35,8 +33,6 @@ public interface EventSet {
 	List<Serializable> getEvents();
 
 	Long getFromVersion();
-
-	String getPartitionID();
 
 	UUID getStreamID();
 

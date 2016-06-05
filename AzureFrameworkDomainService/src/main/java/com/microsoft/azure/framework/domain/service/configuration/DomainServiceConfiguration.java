@@ -11,8 +11,6 @@ public interface DomainServiceConfiguration {
 
 	public OutputEventStream.BuilderFactory getOutputEventStreamBuilderFactory();
 
-	public String getPartitionID();
-
 	public Map<String, Class<?>> getRoutingMap();
 
 	public Map<String, Class<?>> getSnapshotMap();
@@ -20,8 +18,6 @@ public interface DomainServiceConfiguration {
 	public void setInputEventStreamBuilderFactory(InputEventStream.BuilderFactory inputEventStreamBuilderFactory);
 
 	public void setOutputEventStreamBuilderFactory(OutputEventStream.BuilderFactory outputEventStreamBuilderFactory);
-
-	public void setPartitionID(String partitionID);
 
 	public void setRoutingMap(Map<String, Class<?>> routingMap);
 

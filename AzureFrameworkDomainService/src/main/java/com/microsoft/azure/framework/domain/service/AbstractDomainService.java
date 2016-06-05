@@ -52,8 +52,7 @@ public abstract class AbstractDomainService implements DomainService {
 	private Long getLatestSnapshotVersion(final Command command, final Aggregate aggregate) {
 		final InputEventStream.Builder inputEventStreamBuilder = domainServiceConfiguration
 				.getInputEventStreamBuilderFactory().create();
-		inputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
-				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateId());
+		inputEventStreamBuilder.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateId());
 		final Class<?> clazz = domainServiceConfiguration.getSnapshotMap().get(aggregate.getClass().getName());
 		inputEventStreamBuilder.buildFilter(clazz).buildFromVersion(Long.MAX_VALUE);
 		try (final InputEventStream ies = inputEventStreamBuilder.build()) {
@@ -70,8 +69,7 @@ public abstract class AbstractDomainService implements DomainService {
 	protected final void populateAggregateFromStream(final Command command, final Aggregate aggregate) {
 		final InputEventStream.Builder inputEventStreamBuilder = domainServiceConfiguration
 				.getInputEventStreamBuilderFactory().create();
-		inputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
-				.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateId())
+		inputEventStreamBuilder.buildBucketID(aggregate.getClass().getName()).buildStreamID(command.getAggregateId())
 				.buildFilter(Serializable.class).buildFromVersion(getLatestSnapshotVersion(command, aggregate))
 				.buildToVersion(Long.MAX_VALUE);
 		try (final InputEventStream ies = inputEventStreamBuilder.build()) {
@@ -112,8 +110,7 @@ public abstract class AbstractDomainService implements DomainService {
 	protected final void populateStreamFromAggregate(final Aggregate aggregate) {
 		final OutputEventStream.Builder outputEventStreamBuilder = domainServiceConfiguration
 				.getOutputEventStreamBuilderFactory().create();
-		outputEventStreamBuilder.buildPartitionID(domainServiceConfiguration.getPartitionID())
-				.buildBucketID(aggregate.getClass().getName()).buildStreamID(aggregate.getID())
+		outputEventStreamBuilder.buildBucketID(aggregate.getClass().getName()).buildStreamID(aggregate.getID())
 				.buildFromVersion(aggregate.getVersion() + 1L);
 		final Calendar dateTime = dateTimeService.getUTCDateTime();
 		for(final Event event : aggregate.getEvents()) {

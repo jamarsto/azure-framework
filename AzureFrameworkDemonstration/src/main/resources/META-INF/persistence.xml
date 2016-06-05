@@ -14,4 +14,13 @@
             <property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/persistence/event-store-unit-factory" />
 		</properties>
 	</persistence-unit>
+	<persistence-unit name="materialized-view-unit" transaction-type="jta">
+		<jta-data-source>java:/jdbc/managed/demo</jta-data-source>
+		<non-jta-data-source>java:/jdbc/unmanaged/demo</non-jta-data-source>
+		<class>com.microsoft.azure.framework.viewmanager.ViewVersion</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2012Dialect" />
+            <property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/persistence/materialized-view-unit-factory" />
+		</properties>
+	</persistence-unit>
 </persistence>

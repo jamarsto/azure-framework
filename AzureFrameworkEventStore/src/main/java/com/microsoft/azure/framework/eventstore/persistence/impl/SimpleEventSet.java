@@ -15,7 +15,6 @@ public final class SimpleEventSet implements EventSet {
 		private String bucketID;
 		private List<Serializable> events;
 		private Long fromVersion = 0L;
-		private String partitionID;
 		private final PreconditionService preconditionService;
 		private UUID streamID;
 		private Long toVersion = Long.MAX_VALUE;
@@ -58,15 +57,6 @@ public final class SimpleEventSet implements EventSet {
 		}
 
 		@Override
-		public Builder buildPartitionID(String partitionID) {
-			preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
-
-			this.partitionID = partitionID;
-
-			return this;
-		}
-
-		@Override
 		public Builder buildStreamID(UUID streamID) {
 			preconditionService.requiresNotNull("Stream ID is required.", streamID);
 
@@ -100,12 +90,10 @@ public final class SimpleEventSet implements EventSet {
 	private final String bucketID;
 	private final List<Serializable> events;
 	private final Long fromVersion;
-	private final String partitionID;
 	private final UUID streamID;
 	private final Long toVersion;
 
 	private SimpleEventSet(final Builder builder) {
-		this.partitionID = builder.partitionID;
 		this.bucketID = builder.bucketID;
 		this.streamID = builder.streamID;
 		this.fromVersion = builder.fromVersion;
@@ -126,11 +114,6 @@ public final class SimpleEventSet implements EventSet {
 	@Override
 	public Long getFromVersion() {
 		return fromVersion;
-	}
-
-	@Override
-	public String getPartitionID() {
-		return partitionID;
 	}
 
 	@Override

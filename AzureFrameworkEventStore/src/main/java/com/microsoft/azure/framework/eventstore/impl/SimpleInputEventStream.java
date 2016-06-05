@@ -22,7 +22,6 @@ public final class SimpleInputEventStream implements InputEventStream {
 		private UUID changeSetID;
 		private Class<?> filter = Serializable.class;
 		private Long fromVersion = 0L;
-		private String partitionID;
 		@Autowired
 		private PreconditionService preconditionService;
 		@Autowired
@@ -32,7 +31,6 @@ public final class SimpleInputEventStream implements InputEventStream {
 
 		@Override
 		public InputEventStream build() throws IOException {
-			preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
 			preconditionService.requiresNotEmpty("Bucket ID is required.", bucketID);
 			preconditionService.requiresNotNull("Stream ID is required.", streamID);
 			preconditionService.requiresGE("From Version must greater than or equal to zero.", fromVersion, 0L);
@@ -93,15 +91,6 @@ public final class SimpleInputEventStream implements InputEventStream {
 		}
 
 		@Override
-		public Builder buildPartitionID(final String partitionID) {
-			preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
-
-			this.partitionID = partitionID;
-
-			return this;
-		}
-
-		@Override
 		public Builder buildStreamID(final UUID streamID) {
 			preconditionService.requiresNotNull("Stream ID is required.", streamID);
 
@@ -144,7 +133,6 @@ public final class SimpleInputEventStream implements InputEventStream {
 	private Iterator<Serializable> iterator;
 	private List<Serializable> list;
 	private int numberConsumed = 0;
-	private final String partitionID;
 	private final PreconditionService preconditionService;
 	private final EventSetRepository eventSetRepository;
 	private final UUID streamID;
@@ -153,7 +141,6 @@ public final class SimpleInputEventStream implements InputEventStream {
 	public SimpleInputEventStream(final Builder builder) throws IOException {
 		this.eventSetRepository = builder.eventSetRepository;
 		this.preconditionService = builder.preconditionService;
-		this.partitionID = builder.partitionID;
 		this.bucketID = builder.bucketID;
 		this.streamID = builder.streamID;
 		this.fromVersion = builder.fromVersion;
@@ -194,11 +181,6 @@ public final class SimpleInputEventStream implements InputEventStream {
 	}
 
 	@Override
-	public String getPartitionID() {
-		return partitionID;
-	}
-
-	@Override
 	public UUID getStreamID() {
 		return streamID;
 	}
@@ -212,9 +194,9 @@ public final class SimpleInputEventStream implements InputEventStream {
 		try {
 			EventSet eventSet = null;
 			if (changeSetID != null) {
-				eventSet = eventSetRepository.getEventSet(partitionID, bucketID, streamID, filter, changeSetID);
+				eventSet = eventSetRepository.getEventSet(bucketID, streamID, filter, changeSetID);
 			} else {
-				eventSet = eventSetRepository.getEventSet(partitionID, bucketID, streamID, filter, fromVersion,
+				eventSet = eventSetRepository.getEventSet(bucketID, streamID, filter, fromVersion,
 						toVersion);
 			}
 			fromVersion = eventSet.getFromVersion();

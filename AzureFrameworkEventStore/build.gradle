@@ -29,7 +29,7 @@ install {
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
 	compile 'org.springframework:spring-tx:4.2.6.RELEASE'
-    compile 'javax:javaee-api:6.0'
+    compile 'javax:javaee-api:7.0'
     compile 'com-microsoft-azure:azure-framework-preconditionservice:1.0.0'
 
     testCompile 'junit:junit:4.12'

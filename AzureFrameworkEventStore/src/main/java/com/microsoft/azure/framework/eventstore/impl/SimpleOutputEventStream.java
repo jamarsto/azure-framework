@@ -31,14 +31,12 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 		@Autowired
 		private EventSetRepository eventSetRepository;
 		private Long fromVersion = 0L;
-		private String partitionID;
 		@Autowired
 		private PreconditionService preconditionService;
 		private UUID streamID;
 
 		@Override
 		public OutputEventStream build() {
-			preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
 			preconditionService.requiresNotEmpty("Bucket ID is required.", bucketID);
 			preconditionService.requiresNotNull("Stream ID is required.", streamID);
 			preconditionService.requiresGE("From Version must greater than or equal to zero.", fromVersion, 0L);
@@ -60,15 +58,6 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 			preconditionService.requiresGE("From Version must greater than or equal to zero.", fromVersion, 0L);
 
 			this.fromVersion = fromVersion;
-
-			return this;
-		}
-
-		@Override
-		public Builder buildPartitionID(final String partitionID) {
-			preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
-
-			this.partitionID = partitionID;
 
 			return this;
 		}
@@ -102,19 +91,17 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 	private final EventSetRepository eventSetRepository;
 	private Long fromVersion;
 	private Boolean isClosed;
-	private final String partitionID;
 	private final PreconditionService preconditionService;
 	private final UUID streamID;
 
 	private SimpleOutputEventStream(final Builder builder) {
-		this.partitionID = builder.partitionID;
 		this.bucketID = builder.bucketID;
 		this.streamID = builder.streamID;
 		this.fromVersion = builder.fromVersion;
 		this.preconditionService = builder.preconditionService;
 		this.eventSetRepository = builder.eventSetRepository;
 		this.eventSetBuilder = builder.eventSetBuilderFactory.create();
-		this.eventSetBuilder.buildPartitionID(partitionID).buildBucketID(bucketID).buildStreamID(streamID)
+		this.eventSetBuilder.buildBucketID(bucketID).buildStreamID(streamID)
 				.buildFromVersion(fromVersion);
 		this.events = new ArrayList<Serializable>();
 		this.isClosed = Boolean.FALSE;
@@ -152,11 +139,6 @@ public final class SimpleOutputEventStream implements OutputEventStream {
 	@Override
 	public String getBucketID() {
 		return bucketID;
-	}
-
-	@Override
-	public String getPartitionID() {
-		return partitionID;
 	}
 
 	@Override

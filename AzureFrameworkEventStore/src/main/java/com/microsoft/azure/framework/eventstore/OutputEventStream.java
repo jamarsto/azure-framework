@@ -16,8 +16,6 @@ public interface OutputEventStream extends EventStream, Closeable {
 
 		Builder buildFromVersion(Long fromVersion);
 
-		Builder buildPartitionID(String partitionID);
-
 		Builder buildStreamID(UUID streamID);
 
 	}

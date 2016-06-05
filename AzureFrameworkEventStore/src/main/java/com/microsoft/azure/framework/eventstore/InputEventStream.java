@@ -20,8 +20,6 @@ public interface InputEventStream extends EventStream, Closeable {
 
 		Builder buildFromVersion(Long fromVersion);
 
-		Builder buildPartitionID(String partitionID);
-
 		Builder buildStreamID(UUID streamID);
 
 		Builder buildToVersion(Long toVersion);

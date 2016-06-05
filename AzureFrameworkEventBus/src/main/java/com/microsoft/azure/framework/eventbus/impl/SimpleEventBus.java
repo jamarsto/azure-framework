@@ -19,19 +19,15 @@ import com.microsoft.azure.framework.domain.aggregate.AggregateException;
 import com.microsoft.azure.framework.domain.event.Event;
 import com.microsoft.azure.framework.domain.event.impl.EventEntry;
 import com.microsoft.azure.framework.eventbus.EventBus;
-import com.microsoft.azure.framework.eventbus.configuration.EventBusConfiguration;
-import com.microsoft.azure.framework.eventbus.configuration.Namespace;
 import com.microsoft.azure.framework.precondition.PreconditionService;
+import com.microsoft.azure.framework.servicebus.configuration.AzureServiceBusConfiguration;
+import com.microsoft.azure.framework.servicebus.configuration.Namespace;
 import com.microsoft.windowsazure.Configuration;
 import com.microsoft.windowsazure.exception.ServiceException;
 import com.microsoft.windowsazure.services.servicebus.ServiceBusConfiguration;
 import com.microsoft.windowsazure.services.servicebus.ServiceBusContract;
 import com.microsoft.windowsazure.services.servicebus.ServiceBusService;
 import com.microsoft.windowsazure.services.servicebus.models.BrokeredMessage;
-import com.microsoft.windowsazure.services.servicebus.models.ReceiveMessageOptions;
-import com.microsoft.windowsazure.services.servicebus.models.ReceiveMode;
-import com.microsoft.windowsazure.services.servicebus.models.ReceiveSubscriptionMessageResult;
-import com.microsoft.windowsazure.services.servicebus.models.SubscriptionInfo;
 import com.microsoft.windowsazure.services.servicebus.models.TopicInfo;
 
 @Component
@@ -40,7 +36,7 @@ public final class SimpleEventBus implements EventBus {
 	@Autowired
 	private PreconditionService preconditionService;
 	@Autowired
-	private EventBusConfiguration eventBusConfiguration;
+	private AzureServiceBusConfiguration azureServiceBusConfiguration;
 
 	private ServiceBusContract getTopicService(final String serviceName, final String secretName,
 			final String topicPath) {
@@ -68,14 +64,13 @@ public final class SimpleEventBus implements EventBus {
 	}
 
 	private void publish(final String bucketID, final UUID streamID, final Long version, final List<Event> events) {
-		final String partitionID = eventBusConfiguration.getPartitionID();
-		final List<Namespace> namespaces = eventBusConfiguration.getNamespaces();
+		final List<Namespace> namespaces = azureServiceBusConfiguration.getNamespaces();
 		AggregateException lastException = null;
 		for (final Namespace namespace : namespaces) {
 			try {
 				final ServiceBusContract service = getTopicService(namespace.getName(), namespace.getSecret(),
 						bucketID);
-				publish(partitionID, bucketID, streamID, version, events, service);
+				publish(bucketID, streamID, version, events, service);
 				return;
 			} catch (final AggregateException e) {
 				lastException = e;
@@ -85,12 +80,11 @@ public final class SimpleEventBus implements EventBus {
 				throw e;
 			}
 		}
-		LOGGER.error(String.format("Unable to publish Event %s : %s : %s : %s", eventBusConfiguration.getPartitionID(),
-				bucketID, streamID, version));
+		LOGGER.error(String.format("Unable to publish Event %s : %s : %s", bucketID, streamID, version));
 		throw lastException;
 	}
 
-	private void publish(final String partitionID, final String bucketID, final UUID streamID, final Long version,
+	private void publish(final String bucketID, final UUID streamID, final Long version,
 			final List<Event> events, final ServiceBusContract service) {
 		try {
 			final List<EventEntry> eventEntries = new ArrayList<EventEntry>();
@@ -101,8 +95,6 @@ public final class SimpleEventBus implements EventBus {
 			}
 			final String eventsString = mapper.writeValueAsString(eventEntries);
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
-			// message.setProperty("isCatchUp", Boolean.FALSE);
-			message.setProperty("partitionID", partitionID);
 			message.setProperty("aggregateClassName", bucketID);
 			message.setProperty("aggregateId", streamID);
 			message.setProperty("fromVersion", version + 1L);
@@ -114,71 +106,4 @@ public final class SimpleEventBus implements EventBus {
 			throw new AggregateException(e.getMessage(), e);
 		}
 	}
-
-	private void consume(final String serviceName, final String secretName, final String topicPath,
-			final String viewName) {
-		try {
-			final ObjectMapper mapper = new ObjectMapper();
-			final ServiceBusContract service = getSubscriptionService(serviceName, secretName, topicPath, viewName);
-			final ReceiveMessageOptions opts = ReceiveMessageOptions.DEFAULT;
-			opts.setReceiveMode(ReceiveMode.PEEK_LOCK);
-			opts.setTimeout(60);
-			while (!Thread.interrupted()) {
-				final ReceiveSubscriptionMessageResult result = service.receiveSubscriptionMessage(topicPath, viewName,
-						opts);
-				if (result == null || Thread.interrupted()) {
-					continue;
-				}
-				final BrokeredMessage message = result.getValue();
-				final String partitionID = (String) message.getProperty("partitionID");
-				final String aggregateClassName = (String) message.getProperty("aggregateClassName");
-				final String aggregateID = (String) message.getProperty("aggregateID");
-				final Long fromVersion = (Long) message.getProperty("fromVersion");
-				final Long toVersion = (Long) message.getProperty("toVersion");
-				final EventEntry[] eventEntryArray = mapper.readValue(message.getBody(), EventEntry[].class);
-				final List<Event> events = new ArrayList<Event>();
-				for (final EventEntry eventEntry : eventEntryArray) {
-					@SuppressWarnings("unchecked")
-					final Class<? extends Event> clazz = (Class<? extends Event>) Class
-							.forName(eventEntry.getEventClassName());
-					final Event event = mapper.readValue(eventEntry.getEvent(), clazz);
-					events.add(event);
-				}
-			}
-		} catch (final ServiceException | WebApplicationException e) {
-			e.printStackTrace();
-		} catch (final IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private ServiceBusContract getSubscriptionService(final String serviceName, final String secretName,
-			final String topicPath, final String viewName) {
-		final Configuration config = ServiceBusConfiguration.configureWithSASAuthentication(serviceName,
-				"RootManageSharedAccessKey", secretName, ".servicebus.windows.net");
-		final ServiceBusContract service = ServiceBusService.create(config);
-		final SubscriptionInfo subscriptionInfo = new SubscriptionInfo(viewName);
-		try {
-			service.getSubscription(topicPath, viewName);
-		} catch (final ServiceException | WebApplicationException e) {
-			try {
-				service.createSubscription(topicPath, subscriptionInfo);
-			} catch (final ServiceException | WebApplicationException se) {
-				throw new AggregateException(se.getMessage(), se);
-			}
-		}
-		return service;
-	}
-	//
-	// private void publishViewCatchUp(final String partitionID, final String
-	// bucketID, final ServiceBusContract service) {
-	// try {
-	// final BrokeredMessage message = new BrokeredMessage("REBUILD");
-	// message.setProperty("isCatchUp", Boolean.TRUE);
-	// message.setProperty("partitionID", partitionID);
-	// service.sendTopicMessage(bucketID, message);
-	// } catch (final ServiceException | WebApplicationException e) {
-	// throw new AggregateException(e.getMessage(), e);
-	// }
-	// }
 }

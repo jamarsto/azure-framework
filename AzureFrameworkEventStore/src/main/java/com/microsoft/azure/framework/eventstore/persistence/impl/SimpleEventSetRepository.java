@@ -48,11 +48,10 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 	}
 
 	@Override
-	public EventSet getEventSet(final String partitionID, final String bucketID, final UUID streamID,
+	public EventSet getEventSet(final String bucketID, final UUID streamID,
 			final Class<?> filter, final Long fromVersion, final Long toVersion) {
-		final List<EventStoreEntry> entries = eventStoreDAO.getEvents(partitionID, bucketID, streamID, filter,
+		final List<EventStoreEntry> entries = eventStoreDAO.getEvents(bucketID, streamID, filter,
 				fromVersion, toVersion);
-		preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
 		preconditionService.requiresNotEmpty("Bucket ID is required.", bucketID);
 		preconditionService.requiresNotNull("Stream ID is required.", streamID);
 		preconditionService.requiresNotNull("Filter is required.", filter);
@@ -62,7 +61,7 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 		preconditionService.requiresGE("To Version must be greater than or equal to From Version.", toVersion, fromVersion);
 
 		final EventSet.Builder eventSetBuilder = eventSetBuilderFactory.create();
-		eventSetBuilder.buildPartitionID(partitionID).buildBucketID(bucketID).buildStreamID(streamID);
+		eventSetBuilder.buildBucketID(bucketID).buildStreamID(streamID);
 
 		if (!entries.isEmpty()) {
 			final Long startVersion = entries.get(0).getVersion();
@@ -75,18 +74,17 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 	}
 
 	@Override
-	public EventSet getEventSet(final String partitionID, final String bucketID, final UUID streamID,
+	public EventSet getEventSet(final String bucketID, final UUID streamID,
 			final Class<?> filter, final UUID changeSetID) {
-		preconditionService.requiresNotEmpty("Partition ID is required.", partitionID);
 		preconditionService.requiresNotEmpty("Bucket ID is required.", bucketID);
 		preconditionService.requiresNotNull("Stream ID is required.", streamID);
 		preconditionService.requiresNotNull("Filter is required.", filter);
 		preconditionService.requiresNotNull("Change Set ID is required.", changeSetID);
 		
-		final List<EventStoreEntry> entries = eventStoreDAO.getEvents(partitionID, bucketID, streamID, filter,
+		final List<EventStoreEntry> entries = eventStoreDAO.getEvents(bucketID, streamID, filter,
 				changeSetID);
 		final EventSet.Builder eventSetBuilder = eventSetBuilderFactory.create();
-		eventSetBuilder.buildPartitionID(partitionID).buildBucketID(bucketID).buildStreamID(streamID);
+		eventSetBuilder.buildBucketID(bucketID).buildStreamID(streamID);
 
 		if (!entries.isEmpty()) {
 			final Long startVersion = entries.get(0).getVersion();
@@ -105,7 +103,7 @@ public final class SimpleEventSetRepository implements EventSetRepository {
 
 		final List<EventStoreEntry> entries = new ArrayList<EventStoreEntry>();
 		final EventStoreEntry.Builder builder = eventStoreEntryBuilderFactory.create();
-		builder.buildPartitionID(eventSet.getPartitionID()).buildBucketID(eventSet.getBucketID())
+		builder.buildBucketID(eventSet.getBucketID())
 				.buildStreamID(eventSet.getStreamID()).buildChangeSetID(changeSetID);
 		Long version = eventSet.getFromVersion();
 		for (final Serializable event : eventSet.getEvents()) {

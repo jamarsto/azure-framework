@@ -32,8 +32,9 @@ dependencies {
 	compile 'org.springframework:spring-tx:4.2.6.RELEASE'
     compile 'com-microsoft-azure:azure-oidc:1.0.0'
     compile 'com-microsoft-azure:azure-framework-rest:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-viewmanager:1.0.0'
 	compile 'com.microsoft.azure:azure-servicebus:0.9.3'
-    providedCompile 'javax:javaee-api:6.0'
+    providedCompile 'javax:javaee-api:7.0'
 
     testCompile 'junit:junit:4.12'
 }

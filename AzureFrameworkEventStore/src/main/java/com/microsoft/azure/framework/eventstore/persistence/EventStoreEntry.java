@@ -22,23 +22,23 @@ import com.microsoft.azure.framework.precondition.PreconditionService;
 
 @NamedQueries({
 		@NamedQuery(name = "EventStoreEntry.classNameHighestVersion", query = "SELECT e FROM EventStoreEntry e "
-				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
+				+ "WHERE e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.eventClassName = :eventClassName " 
 				+ "ORDER BY e.version DESC"),
 		@NamedQuery(name = "EventStoreEntry.classNameAndVersionRange", query = "SELECT e FROM EventStoreEntry e "
-				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
+				+ "WHERE e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.eventClassName = :eventClassName AND e.version >= :fromVersion AND e.version <= :toVersion "
 				+ "ORDER BY e.version"),
 		@NamedQuery(name = "EventStoreEntry.classNameAndChangeSetID", query = "SELECT e FROM EventStoreEntry e "
-				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
+				+ "WHERE e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.eventClassName = :eventClassName AND e.changeSetID = :changeSetID "
 				+ "ORDER BY e.version"),
 		@NamedQuery(name = "EventStoreEntry.changeSetID", query = "SELECT e FROM EventStoreEntry e "
-				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
+				+ "WHERE e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.changeSetID = :changeSetID "
 				+ "ORDER BY e.version"),
 		@NamedQuery(name = "EventStoreEntry.versionRange", query = "SELECT e FROM EventStoreEntry e "
-				+ "WHERE e.partitionID = :partitionID AND e.bucketID = :bucketID AND e.streamID = :streamID "
+				+ "WHERE e.bucketID = :bucketID AND e.streamID = :streamID "
 				+ "AND e.version >= :fromVersion AND e.version <= :toVersion " 
 				+ "ORDER BY e.version") })
 @Entity
@@ -50,14 +50,12 @@ public class EventStoreEntry {
 		private UUID changeSetID;
 		private String event;
 		private String eventClassName;
-		private String partitionID;
 		@Autowired
 		private PreconditionService precondition;
 		private UUID streamID;
 		private Long version;
 
 		public EventStoreEntry build() {
-			precondition.requiresNotEmpty("Partition ID is required.", partitionID);
 			precondition.requiresNotEmpty("Bucket ID is required.", bucketID);
 			precondition.requiresNotNull("Stream ID is required.", streamID);
 			precondition.requiresNotNull("Version is required.", version);
@@ -96,14 +94,6 @@ public class EventStoreEntry {
 			precondition.requiresNotEmpty("Event Class Name is required.", eventClassName);
 
 			this.eventClassName = eventClassName;
-
-			return this;
-		}
-
-		public Builder buildPartitionID(final String partitionID) {
-			precondition.requiresNotEmpty("Partition ID is required.", partitionID);
-
-			this.partitionID = partitionID;
 
 			return this;
 		}
@@ -153,8 +143,6 @@ public class EventStoreEntry {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", columnDefinition = "uniqueidentifier", insertable = false, updatable = false)
 	private UUID id;
-	@Column(name = "PARTITION_ID", updatable = false)
-	private String partitionID;
 	@Column(name = "STREAM_ID", columnDefinition = "uniqueidentifier", updatable = false)
 	private UUID streamID;
 	@Column(name = "EVENT_VERSION", updatable = false)
@@ -164,7 +152,6 @@ public class EventStoreEntry {
 	}
 
 	private EventStoreEntry(Builder builder) {
-		this.partitionID = builder.partitionID;
 		this.bucketID = builder.bucketID;
 		this.streamID = builder.streamID;
 		this.version = builder.version;
@@ -191,10 +178,6 @@ public class EventStoreEntry {
 
 	public UUID getId() {
 		return id;
-	}
-
-	public String getPartitionID() {
-		return partitionID;
 	}
 
 	public UUID getStreamID() {
