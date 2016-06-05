@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -23,6 +25,7 @@ public final class TransactionView {
 	@Column(name = "AMOUNT", updatable = false)
 	private BigDecimal amount;
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", insertable = false, updatable = false)
 	private UUID id;
 	@Column(name = "TRANSACTION_TYPE", updatable = false)
