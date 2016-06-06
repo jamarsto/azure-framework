@@ -14,11 +14,9 @@ import com.microsoft.azure.framework.viewmanager.AbstractViewManager;
 public final class AccountViewManager extends AbstractViewManager {
 
 	public void apply(final UUID aggregateId, final CreatedAccount event) {
-		getLogger().warn("CREATING ACCOUNT");
 		final AccountView accountView = new AccountView(aggregateId, event);
 		getEntityManager().persist(accountView);
 		getEntityManager().flush();
-		getLogger().warn("CREATED ACCOUNT");
 	}
 
 	public void apply(final UUID aggregateId, final DepositedFunds event) {
