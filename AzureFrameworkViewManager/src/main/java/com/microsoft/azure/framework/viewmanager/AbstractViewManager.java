@@ -257,6 +257,7 @@ public abstract class AbstractViewManager {
 				if (brokeredMessage != null && brokeredMessage.getMessageId() != null) {
 					try {
 						service.unlockMessage(brokeredMessage);
+						getLogger().info("Unlocked message");
 					} catch (final Exception e1) {
 						getLogger().warn("Unable to unlock message - will auto-unlock on lock timout");
 					}
@@ -266,10 +267,12 @@ public abstract class AbstractViewManager {
 					try {
 						userTransaction.rollback();
 						inTransaction = Boolean.FALSE;
+						getLogger().info("Rolled back transaction");
 					} catch (final Exception e1) {
 						getLogger().warn("Problem with rollback");
 					}
 				}
+				getLogger().error(e.getMessage(), e);
 			}
 		}
 	}
