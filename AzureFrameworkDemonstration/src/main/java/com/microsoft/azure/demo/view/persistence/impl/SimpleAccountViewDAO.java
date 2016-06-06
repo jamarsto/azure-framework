@@ -14,6 +14,8 @@ import com.microsoft.azure.demo.view.persistence.AccountViewDAO;
 @Component
 public final class SimpleAccountViewDAO extends AbstractDAO implements AccountViewDAO {
 	private static final String SELECT_CLAUSE = "SELECT ID, BALANCE FROM ACCOUNT_VIEW ";
+	private static final String UNIQUE_QUERY = SELECT_CLAUSE + "WHERE ID = ?";
+	private static final String LIST_QUERY = SELECT_CLAUSE + "ORDER BY ID";
 
 	private static final class AccountBeanRowMapper implements RowMapper<AccountBean> {
 		@Override
@@ -27,13 +29,12 @@ public final class SimpleAccountViewDAO extends AbstractDAO implements AccountVi
 
 	@Override
 	public AccountBean getAccount(final UUID accountId) {
-		return getJdbcTemplate().queryForObject(SELECT_CLAUSE + "WHERE ID = ?",
-				new Object[] { accountId.toString() }, new AccountBeanRowMapper());
+		return getJdbcTemplate().queryForObject(UNIQUE_QUERY, new Object[] { accountId.toString() },
+				new AccountBeanRowMapper());
 	}
 
 	@Override
 	public List<AccountBean> getAccounts() {
-		return getJdbcTemplate().queryForList(SELECT_CLAUSE + "ORDER BY ID", AccountBean.class,
-				new AccountBeanRowMapper());
+		return getJdbcTemplate().queryForList(LIST_QUERY, AccountBean.class, new AccountBeanRowMapper());
 	}
 }

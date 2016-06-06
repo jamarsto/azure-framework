@@ -16,6 +16,8 @@ import com.microsoft.azure.demo.view.persistence.TransactionViewDAO;
 @Component
 public final class SimpleTransactionViewDAO extends AbstractDAO implements TransactionViewDAO {
 	private static final String SELECT_CLAUSE = "SELECT AGGREGATE_ID, ID, TRANSACTION_TYPE, TRANSACTION_CREATED, AMOUNT FROM TRANSACTION_VIEW ";
+	private static final String UNIQUE_QUERY = SELECT_CLAUSE + "WHERE AGGREGATE_ID = ? AND ID = ?";
+	private static final String LIST_QUERY = SELECT_CLAUSE + "WHERE AGGREGATE_ID = ? ORDER BY TRANSACTION_CREATED";
 
 	private static final class TransactionBeanRowMapper implements RowMapper<TransactionBean> {
 		@Override
@@ -34,13 +36,13 @@ public final class SimpleTransactionViewDAO extends AbstractDAO implements Trans
 
 	@Override
 	public TransactionBean getTransaction(final UUID accountId, final UUID transactionId) {
-		return getJdbcTemplate().queryForObject(SELECT_CLAUSE + "WHERE AGGREGATE_ID = ? AND ID = ?",
+		return getJdbcTemplate().queryForObject(UNIQUE_QUERY,
 				new Object[] { accountId.toString(), transactionId.toString() }, new TransactionBeanRowMapper());
 	}
 
 	@Override
 	public List<TransactionBean> getTransactions(final UUID accountId) {
-		return getJdbcTemplate().queryForList(SELECT_CLAUSE + "WHERE AGGREGATE_ID = ? ORDER BY TRANSACTION_CREATED",
-				TransactionBean.class, new Object[] { accountId.toString() }, new TransactionBeanRowMapper());
+		return getJdbcTemplate().queryForList(LIST_QUERY, TransactionBean.class, new Object[] { accountId.toString() },
+				new TransactionBeanRowMapper());
 	}
 }
