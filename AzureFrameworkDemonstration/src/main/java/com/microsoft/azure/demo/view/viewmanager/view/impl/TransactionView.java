@@ -43,6 +43,7 @@ public final class TransactionView {
 
 	public TransactionView(final UUID aggregateId, final DepositedFunds event) {
 		this(aggregateId, (Event)event);
+		this.amount = event.getAmount();
 		this.type = DEPOSIT;
 	}
 	
