@@ -33,7 +33,7 @@ public final class SimpleAccountViewDAO extends AbstractDAO implements AccountVi
 
 	@Override
 	public List<AccountBean> getAccounts() {
-		return getJdbcTemplate().queryForList(SELECT_CLAUSE, AccountBean.class,
+		return getJdbcTemplate().queryForList(SELECT_CLAUSE + "ORDER BY ID", AccountBean.class,
 				new AccountBeanRowMapper());
 	}
 }
