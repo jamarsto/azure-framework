@@ -21,6 +21,8 @@
 	<jee:jndi-lookup id="managedThreadFactory"
 		jndi-name="java:jboss/ee/concurrency/factory/default" />
 
+	<jee:jndi-lookup id="viewDataSource" jndi-name="java:/jdbc/managed/demo" />
+
 	<bean id="txManager"
 		class="org.springframework.transaction.jta.JtaTransactionManager" />
 

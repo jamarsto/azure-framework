@@ -112,7 +112,7 @@ public abstract class AbstractViewManager {
 	}
 
 	@PostConstruct
-	public final void PostConstruct() {
+	private void PostConstruct() {
 		getLogger().info("Starting View Manager");
 		executorService = Executors.newFixedThreadPool(azureServiceBusConfiguration.getNamespaces().size()
 				* azureServiceBusConfiguration.getNumberOfReceivers(), managedThreadFactory);
@@ -129,7 +129,7 @@ public abstract class AbstractViewManager {
 	}
 
 	@PreDestroy
-	public final void PreDestroy() {
+	private void PreDestroy() {
 		getLogger().info("Stopping View Manager");
 		isTerminationRequested = Boolean.TRUE;
 		try {

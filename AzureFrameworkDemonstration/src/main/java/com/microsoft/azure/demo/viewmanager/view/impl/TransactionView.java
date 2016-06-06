@@ -9,17 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.microsoft.azure.demo.domain.event.impl.DepositedFunds;
 import com.microsoft.azure.demo.domain.event.impl.WithdrewFunds;
 import com.microsoft.azure.framework.domain.event.Event;
 
-@NamedQueries({
-		@NamedQuery(name = "TransactionView.findAll", query = "SELECT t FROM TransactionView t WHERE t.aggregateId = :accountId"),
-		@NamedQuery(name = "TransactionView.findById", query = "SELECT t FROM TransactionView t WHERE t.aggregateId = :accountId AND t.id = :transactionId") })
 @Entity
 @Table(name = "TRANSACTION_VIEW")
 public final class TransactionView {

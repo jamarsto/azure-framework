@@ -13,14 +13,14 @@ import com.microsoft.azure.framework.viewmanager.AbstractViewManager;
 @Component
 public final class AccountViewManager extends AbstractViewManager {
 
-	public void apply(final UUID aggregateId, final CreatedAccount event) {
-		final AccountView accountView = new AccountView(aggregateId, event);
+	public void apply(final UUID id, final CreatedAccount event) {
+		final AccountView accountView = new AccountView(id, event);
 		getEntityManager().persist(accountView);
 		getEntityManager().flush();
 	}
 
-	public void apply(final UUID aggregateId, final DepositedFunds event) {
-		final AccountView accountView = getEntityManager().find(AccountView.class, aggregateId);
+	public void apply(final UUID id, final DepositedFunds event) {
+		final AccountView accountView = getEntityManager().find(AccountView.class, id);
 		accountView.deposit(event.getAmount());
 		getEntityManager().flush();
 	}
