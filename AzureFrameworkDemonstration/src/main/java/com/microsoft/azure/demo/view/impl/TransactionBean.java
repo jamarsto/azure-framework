@@ -26,14 +26,6 @@ public final class TransactionBean {
 	public TransactionBean() {
 	}
 
-//	public TransactionBean(final UUID accountId, final Character type, final Calendar createdDateTime,
-//			final BigDecimal amount) {
-//		this.accountId = accountId;
-//		this.type = type;
-//		this.createdDateTime = createdDateTime;
-//		this.amount = amount;
-//	}
-
 	public UUID getAccountId() {
 		return accountId;
 	}

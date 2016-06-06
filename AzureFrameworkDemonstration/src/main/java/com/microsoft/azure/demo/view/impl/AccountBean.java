@@ -18,11 +18,6 @@ public final class AccountBean {
 
 	public AccountBean() {
 	}
-	
-//	public AccountBean(final UUID id, final BigDecimal balance) {
-//		this.id = id;
-//		this.balance = balance;
-//	}
 
 	public BigDecimal getBalance() {
 		return balance;
