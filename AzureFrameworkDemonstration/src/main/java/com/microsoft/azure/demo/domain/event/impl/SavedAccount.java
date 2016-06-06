@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.event.impl;
+package com.microsoft.azure.demo.domain.event.impl;
 
 import java.math.BigDecimal;
 

@@ -13,8 +13,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.microsoft.azure.demo.event.impl.DepositedFunds;
-import com.microsoft.azure.demo.event.impl.WithdrewFunds;
+import com.microsoft.azure.demo.domain.event.impl.DepositedFunds;
+import com.microsoft.azure.demo.domain.event.impl.WithdrewFunds;
 import com.microsoft.azure.framework.domain.event.Event;
 
 @NamedQueries({

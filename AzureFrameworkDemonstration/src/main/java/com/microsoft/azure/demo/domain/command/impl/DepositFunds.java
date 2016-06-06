@@ -1,15 +1,15 @@
-package com.microsoft.azure.demo.command.impl;
+package com.microsoft.azure.demo.domain.command.impl;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.microsoft.azure.framework.command.AbstractCommand;
 
-public final class WithdrawFunds extends AbstractCommand {
+public final class DepositFunds extends AbstractCommand {
 	private UUID aggregateId;
 	private BigDecimal amount;
 
-	public WithdrawFunds() {
+	public DepositFunds() {
 	}
 
 	@Override

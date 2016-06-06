@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.command.impl;
+package com.microsoft.azure.demo.domain.command.impl;
 
 import java.util.UUID;
 

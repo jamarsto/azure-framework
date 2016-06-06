@@ -10,7 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.microsoft.azure.demo.event.impl.CreatedAccount;
+import com.microsoft.azure.demo.domain.event.impl.CreatedAccount;
 
 @NamedQueries({ @NamedQuery(name = "AccountView.findAll", query = "SELECT a FROM AccountView a"),
 		@NamedQuery(name = "AccountView.findById", query = "SELECT a FROM AccountView a WHERE a.aggregateId = :accountId") })
