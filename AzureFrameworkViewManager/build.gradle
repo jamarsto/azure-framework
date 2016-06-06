@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '1.0.0'
+
+install {
+    repositories.mavenInstaller {
+        pom.groupId = 'com-microsoft-azure'
+        pom.artifactId = rootProject.name
+        pom.version = version 
+    }
+}
+
+dependencies {
+    compile 'javax:javaee-api:7.0'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
+    compile 'org.springframework:spring-context-support:4.2.6.RELEASE'
+	compile 'com-microsoft-azure:azure-framework-domain:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-servicebus:1.0.0'
+    compile 'com-microsoft-azure:azure-framework-eventstore:1.0.0'
+	compile 'com.microsoft.azure:azure-servicebus:0.9.3'
+
+    testCompile 'junit:junit:4.12'
+}
