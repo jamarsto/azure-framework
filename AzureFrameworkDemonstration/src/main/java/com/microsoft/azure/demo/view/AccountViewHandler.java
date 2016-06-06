@@ -22,7 +22,7 @@ public interface AccountViewHandler {
 	@Path("/{accountId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	Response handleAccount(@Context ServletContext servletContext, @PathParam("accountIdd") String accountIdString);
+	Response handleAccount(@Context ServletContext servletContext, @PathParam("accountId") String accountIdString);
 
 	@GET
 	@Path("/{accountId}/transaction/")

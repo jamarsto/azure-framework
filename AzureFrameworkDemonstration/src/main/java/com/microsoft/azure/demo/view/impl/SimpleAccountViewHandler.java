@@ -40,7 +40,7 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 	}
 
 	@GET
-	@Path("/{id}")
+	@Path("/{accountId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
@@ -78,7 +78,7 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 	}
 
 	@GET
-	@Path("/{accountId}/transaction/{id}")
+	@Path("/{accountId}/transaction/{transactionId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
