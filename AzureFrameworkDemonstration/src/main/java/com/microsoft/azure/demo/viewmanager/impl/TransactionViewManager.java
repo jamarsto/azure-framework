@@ -8,7 +8,7 @@ import com.microsoft.azure.demo.aggregate.impl.Account;
 import com.microsoft.azure.demo.event.impl.CreatedAccount;
 import com.microsoft.azure.demo.event.impl.DepositedFunds;
 import com.microsoft.azure.demo.event.impl.WithdrewFunds;
-import com.microsoft.azure.demo.view.viewmanager.view.impl.TransactionView;
+import com.microsoft.azure.demo.viewmanager.view.impl.TransactionView;
 import com.microsoft.azure.framework.viewmanager.AbstractViewManager;
 
 @Component

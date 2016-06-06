@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.view.viewmanager.view.impl;
+package com.microsoft.azure.demo.viewmanager.view.impl;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -9,12 +9,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.microsoft.azure.demo.event.impl.DepositedFunds;
 import com.microsoft.azure.demo.event.impl.WithdrewFunds;
 import com.microsoft.azure.framework.domain.event.Event;
 
+@NamedQueries({
+		@NamedQuery(name = "TransactionView.findAll", query = "SELECT t FROM TransactionView t WHERE t.aggregateId = :accountId"),
+		@NamedQuery(name = "TransactionView.findById", query = "SELECT t FROM TransactionView t WHERE t.aggregateId = :accountId AND t.id = :transactionId") })
 @Entity
 @Table(name = "TRANSACTION_VIEW")
 public final class TransactionView {
@@ -32,7 +37,7 @@ public final class TransactionView {
 	private Character type;
 	@Column(name = "TRANSACTION_CREATED", updatable = false)
 	private Calendar createdDateTime;
-	
+
 	public TransactionView() {
 	}
 
@@ -42,14 +47,30 @@ public final class TransactionView {
 	}
 
 	public TransactionView(final UUID aggregateId, final DepositedFunds event) {
-		this(aggregateId, (Event)event);
+		this(aggregateId, (Event) event);
 		this.amount = event.getAmount();
 		this.type = DEPOSIT;
 	}
-	
+
 	public TransactionView(final UUID aggregateId, final WithdrewFunds event) {
-		this(aggregateId, (Event)event);
+		this(aggregateId, (Event) event);
 		this.amount = event.getAmount();
 		this.type = WITHDRAWAL;
+	}
+	
+	public UUID getId() {
+		return id;
+	}
+	
+	public BigDecimal getAmount() {
+		return amount;
+	}
+	
+	public Calendar getCreatedDateTime() {
+		return createdDateTime;
+	}
+	
+	public Character getType() {
+		return type;
 	}
 }
