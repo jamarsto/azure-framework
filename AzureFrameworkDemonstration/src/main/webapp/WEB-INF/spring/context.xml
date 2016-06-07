@@ -33,9 +33,9 @@
 		<property name="commandMap">
 			<map>
 				<entry key="CreateAccount" value-type="java.lang.Class"
-					value="com.microsoft.azure.demo.command.impl.CreateAccount" />
+					value="com.microsoft.azure.demo.domain.command.impl.CreateAccount" />
 				<entry key="DepositFunds" value-type="java.lang.Class"
-					value="com.microsoft.azure.demo.command.impl.DepositFunds" />
+					value="com.microsoft.azure.demo.domain.command.impl.DepositFunds" />
 			</map>
 		</property>
 	</bean>
@@ -44,16 +44,16 @@
 		class="com.microsoft.azure.framework.domain.service.configuration.impl.SimpleDomainServiceConfiguration">
 		<property name="routingMap">
 			<map>
-				<entry key="com.microsoft.azure.demo.command.impl.CreateAccount"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.aggregate.impl.Account" />
-				<entry key="com.microsoft.azure.demo.command.impl.DepositFunds"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.aggregate.impl.Account" />
+				<entry key="com.microsoft.azure.demo.domain.command.impl.CreateAccount"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.domain.aggregate.impl.Account" />
+				<entry key="com.microsoft.azure.demo.domain.command.impl.DepositFunds"
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.domain.aggregate.impl.Account" />
 			</map>
 		</property>
 		<property name="snapshotMap">
 			<map>
 				<entry key="com.microsoft.azure.demo.aggregate.impl.Account"
-					value-type="java.lang.Class" value="com.microsoft.azure.demo.event.impl.SavedAccount" />
+					value-type="java.lang.Class" value="com.microsoft.azure.demo.domain.event.impl.SavedAccount" />
 			</map>
 		</property>
 	</bean>
