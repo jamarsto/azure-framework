@@ -9,11 +9,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ResultList {
+public class ResultListBean {
 	@XmlElement
 	private List<?> results;
 
-	public ResultList(final List<?> results) {
+	public ResultListBean(final List<?> results) {
 		this.results = results;
 	}
 	

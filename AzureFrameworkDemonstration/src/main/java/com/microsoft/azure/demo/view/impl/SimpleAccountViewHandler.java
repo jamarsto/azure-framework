@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.microsoft.azure.demo.view.AccountViewHandler;
 import com.microsoft.azure.demo.view.bean.AccountBean;
-import com.microsoft.azure.demo.view.bean.ResultList;
+import com.microsoft.azure.demo.view.bean.ResultListBean;
 import com.microsoft.azure.demo.view.bean.TransactionBean;
 import com.microsoft.azure.demo.view.persistence.AccountViewDAO;
 import com.microsoft.azure.demo.view.persistence.TransactionViewDAO;
@@ -34,9 +34,9 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 		try {
 			final AccountViewDAO accountViewDAO = getBean(servletContext, AccountViewDAO.class);
 			final List<AccountBean> accountBeanList = accountViewDAO.getAccounts();
-			return Response.ok(new ResultList(accountBeanList)).build();
+			return Response.ok(new ResultListBean(accountBeanList)).build();
 		} catch (final NoResultException e) {
-			return Response.ok(new ResultList(new ArrayList<AccountBean>())).build();
+			return Response.ok(new ResultListBean(new ArrayList<AccountBean>())).build();
 		} catch (final RuntimeException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
@@ -72,9 +72,9 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final TransactionViewDAO transactionViewDAO = getBean(servletContext, TransactionViewDAO.class);
 			final UUID accountId = UUID.fromString(accountIdString);
 			final List<TransactionBean> transactionBeanList = transactionViewDAO.getTransactions(accountId);
-			return Response.ok(new ResultList(transactionBeanList)).build();
+			return Response.ok(new ResultListBean(transactionBeanList)).build();
 		} catch (final NoResultException e) {
-			return Response.ok(new ResultList(new ArrayList<TransactionBean>())).build();
+			return Response.ok(new ResultListBean(new ArrayList<TransactionBean>())).build();
 		} catch (final RuntimeException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
