@@ -28,7 +28,7 @@ import com.microsoft.azure.framework.domain.service.ConcurrentUpdatePersistenceE
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
 import com.microsoft.azure.framework.precondition.PreconditionException;
 import com.microsoft.azure.framework.rest.CommandHandler;
-import com.microsoft.azure.framework.rest.bean.Error;
+import com.microsoft.azure.framework.rest.bean.ErrorBean;
 import com.microsoft.azure.framework.rest.bean.UniqueID;
 import com.microsoft.azure.framework.rest.service.CommandService;
 
@@ -58,31 +58,31 @@ public class SimpleCommandHandler implements CommandHandler {
 			commandProcessor.doCommand(command);
 			return Response.ok(new UniqueID(command.getAggregateId())).build();
 		} catch (final AlreadyExistsException | DoesNotExistException e) {
-			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.AGGREGATE_EXISTANCE, e.getMessage()))
+			return Response.status(Status.BAD_REQUEST).entity(new ErrorBean(ErrorBean.AGGREGATE_EXISTANCE, e.getMessage()))
 					.build();
 		} catch (final AggregateException e) {
 			LOGGER.error(e.getMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.AGGREGATE, e.getMessage()))
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(ErrorBean.AGGREGATE, e.getMessage()))
 					.build();
 		} catch (final CommandException e) {
 			LOGGER.error(e.getMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.COMMAND, e.getMessage()))
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(ErrorBean.COMMAND, e.getMessage()))
 					.build();
 		} catch (final DomainServiceException e) {
 			LOGGER.info(e.getMessage(), e);
-			return Response.status(Status.BAD_REQUEST).entity(new Error(Error.DOMAIN_SERVICE, e.getMessage())).build();
+			return Response.status(Status.BAD_REQUEST).entity(new ErrorBean(ErrorBean.DOMAIN_SERVICE, e.getMessage())).build();
 		} catch (final ConcurrentUpdatePersistenceException e) {
 			return Response.status(Status.BAD_REQUEST)
-					.entity(new Error(Error.PERSISTENCE_CONCURRENT_UPDATE, e.getMessage())).build();
+					.entity(new ErrorBean(ErrorBean.PERSISTENCE_CONCURRENT_UPDATE, e.getMessage())).build();
 		} catch (final PersistenceException e) {
 			LOGGER.error(e.getMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.PERSISTENCE, e.getMessage())).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(ErrorBean.PERSISTENCE, e.getMessage())).build();
 		} catch (final PreconditionException e) {
-			return Response.status(Status.PRECONDITION_FAILED).entity(new Error(Error.PRECONDITION, e.getMessage()))
+			return Response.status(Status.PRECONDITION_FAILED).entity(new ErrorBean(ErrorBean.PRECONDITION, e.getMessage()))
 					.build();
 		} catch (final RuntimeException e) {
 			LOGGER.error(e.getMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(Error.RUNTIME, e.getMessage()))
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(ErrorBean.RUNTIME, e.getMessage()))
 					.build();
 		}
 	}

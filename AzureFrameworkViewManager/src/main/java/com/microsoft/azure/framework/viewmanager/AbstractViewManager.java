@@ -234,6 +234,7 @@ public abstract class AbstractViewManager {
 				final ViewVersion viewVersionObject = getViewVersion(entityManager, aggregateID);
 				if (viewVersion.compareTo(viewVersionObject.getVersion()) != 0) {
 					userTransaction.rollback();
+					inTransaction = Boolean.FALSE;
 					service.unlockMessage(brokeredMessage);
 					brokeredMessage = null;
 					continue;

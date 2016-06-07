@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.microsoft.azure.demo.view.AccountViewHandler;
 import com.microsoft.azure.demo.view.bean.AccountBean;
+import com.microsoft.azure.demo.view.bean.ErrorBean;
 import com.microsoft.azure.demo.view.bean.ResultListBean;
 import com.microsoft.azure.demo.view.bean.TransactionBean;
 import com.microsoft.azure.demo.view.persistence.AccountViewDAO;
@@ -34,7 +35,7 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final List<AccountBean> accountBeanList = accountViewDAO.getAccounts();
 			return Response.ok(new ResultListBean(accountBeanList)).build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(e.getMessage())).build();
 		}
 	}
 
@@ -54,7 +55,7 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			}
 			return Response.ok().build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(e.getMessage())).build();
 		}
 	}
 
@@ -71,7 +72,7 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final List<TransactionBean> transactionBeanList = transactionViewDAO.getTransactions(accountId);
 			return Response.ok(new ResultListBean(transactionBeanList)).build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(e.getMessage())).build();
 		}
 	}
 
@@ -93,7 +94,7 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			}
 			return Response.ok().build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorBean(e.getMessage())).build();
 		}
 	}
 }

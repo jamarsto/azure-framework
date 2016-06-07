@@ -7,17 +7,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Error {
+public class ErrorBean {
 	public static final int RUNTIME = 800;
 	@XmlElement
 	private int code;
 	@XmlElement
 	private String message;
 
-	public Error() {
+	public ErrorBean() {
 	}
 
-	public Error(final String message) {
+	public ErrorBean(final String message) {
 		this.code = RUNTIME;
 		this.message = message;
 	}

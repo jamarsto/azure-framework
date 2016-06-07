@@ -35,6 +35,6 @@ public final class SimpleAccountViewDAO extends AbstractDAO implements AccountVi
 
 	@Override
 	public List<AccountBean> getAccounts() {
-		return getJdbcTemplate().queryForList(LIST_QUERY, AccountBean.class, new AccountBeanRowMapper());
+		return getJdbcTemplate().queryForList(LIST_QUERY, AccountBean.class, new Object[] {}, new AccountBeanRowMapper());
 	}
 }

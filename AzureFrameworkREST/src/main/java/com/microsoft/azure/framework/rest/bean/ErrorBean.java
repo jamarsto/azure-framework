@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Error {
+public class ErrorBean {
 	public static final int AGGREGATE = 100;
 	public static final int AGGREGATE_EXISTANCE = 200;
 	public static final int COMMAND = 300;
@@ -21,10 +21,10 @@ public class Error {
 	@XmlElement
 	private String message;
 
-	public Error() {
+	public ErrorBean() {
 	}
 
-	public Error(final int code, final String message) {
+	public ErrorBean(final int code, final String message) {
 		this.code = code;
 		this.message = message;
 	}
