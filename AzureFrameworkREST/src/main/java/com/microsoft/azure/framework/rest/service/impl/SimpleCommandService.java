@@ -1,4 +1,4 @@
-package com.microsoft.azure.framework.rest.impl;
+package com.microsoft.azure.framework.rest.service.impl;
 
 import java.io.IOException;
 
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.framework.command.Command;
 import com.microsoft.azure.framework.precondition.PreconditionService;
-import com.microsoft.azure.framework.rest.CommandException;
-import com.microsoft.azure.framework.rest.CommandService;
 import com.microsoft.azure.framework.rest.configuration.CommandServiceConfiguration;
+import com.microsoft.azure.framework.rest.impl.CommandException;
+import com.microsoft.azure.framework.rest.service.CommandService;
 
 @Component
 public final class SimpleCommandService implements CommandService {

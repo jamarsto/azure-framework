@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.view.impl;
+package com.microsoft.azure.demo.view;
 
 import java.math.BigDecimal;
 import java.util.UUID;

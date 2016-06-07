@@ -1,6 +1,6 @@
-package com.microsoft.azure.framework.rest.impl;
+package com.microsoft.azure.demo.view;
 
-import java.util.UUID;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,18 +9,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UniqueID {
+public class ResultList {
 	@XmlElement
-	private UUID id;
-	
-	public UniqueID() {
-	}
-	
-	public UniqueID(final UUID id) {
-		this.id = id;
-	}
+	private List<?> results;
 
-	public UUID getId() {
-		return id;
+	public ResultList(final List<?> results) {
+		this.results = results;
+	}
+	
+	public List<?> getResults() {
+		return results;
 	}
 }

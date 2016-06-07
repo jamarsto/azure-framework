@@ -1,4 +1,4 @@
-package com.microsoft.azure.framework.rest.impl;
+package com.microsoft.azure.framework.rest;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
