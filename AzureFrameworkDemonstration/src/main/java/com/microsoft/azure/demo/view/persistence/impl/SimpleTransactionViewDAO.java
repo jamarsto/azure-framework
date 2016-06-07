@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +41,12 @@ public final class SimpleTransactionViewDAO extends AbstractDAO implements Trans
 
 	@Override
 	public TransactionBean getTransaction(final UUID accountId, final UUID transactionId) {
-		return getJdbcTemplate().queryForObject(UNIQUE_QUERY,
-				new Object[] { accountId.toString(), transactionId.toString() }, new TransactionBeanRowMapper());
+		try {
+			return getJdbcTemplate().queryForObject(UNIQUE_QUERY,
+					new Object[] { accountId.toString(), transactionId.toString() }, new TransactionBeanRowMapper());
+		} catch (final IncorrectResultSizeDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override

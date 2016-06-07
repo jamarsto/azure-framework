@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +33,12 @@ public final class SimpleAccountViewDAO extends AbstractDAO implements AccountVi
 
 	@Override
 	public AccountBean getAccount(final UUID accountId) {
-		return getJdbcTemplate().queryForObject(UNIQUE_QUERY, new Object[] { accountId.toString() },
-				new AccountBeanRowMapper());
+		try {
+			return getJdbcTemplate().queryForObject(UNIQUE_QUERY, new Object[] { accountId.toString() },
+					new AccountBeanRowMapper());
+		} catch (final IncorrectResultSizeDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
