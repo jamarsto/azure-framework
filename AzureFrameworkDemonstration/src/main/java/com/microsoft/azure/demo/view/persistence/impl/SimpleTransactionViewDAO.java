@@ -1,9 +1,13 @@
 package com.microsoft.azure.demo.view.persistence.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -42,7 +46,20 @@ public final class SimpleTransactionViewDAO extends AbstractDAO implements Trans
 
 	@Override
 	public List<TransactionBean> getTransactions(final UUID accountId) {
-		return getJdbcTemplate().queryForList(LIST_QUERY, TransactionBean.class, new Object[] { accountId.toString() },
-				new TransactionBeanRowMapper());
+		final List<Map<String, Object>> results = getJdbcTemplate().queryForList(LIST_QUERY,
+				new Object[] { accountId.toString() });
+		final List<TransactionBean> transactionBeans = new ArrayList<TransactionBean>();
+		for (final Map<String, Object> rs : results) {
+			final TransactionBean transactionBean = new TransactionBean();
+			transactionBean.setAccountId(UUID.fromString((String) rs.get("AGGREGATE_ID")));
+			transactionBean.setId(UUID.fromString((String) rs.get("ID")));
+			transactionBean.setType(((String) rs.get("TRANSACTION_TYPE")).charAt(0));
+			final Calendar createdDateTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			createdDateTime.setTime((Timestamp) rs.get("TRANSACTION_CREATED"));
+			transactionBean.setCreatedDateTime(createdDateTime);
+			transactionBean.setAmount((BigDecimal) rs.get("AMOUNT"));
+			transactionBeans.add(transactionBean);
+		}
+		return transactionBeans;
 	}
 }

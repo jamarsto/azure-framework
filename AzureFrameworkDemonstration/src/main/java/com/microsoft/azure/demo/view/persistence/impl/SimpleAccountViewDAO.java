@@ -1,8 +1,11 @@
 package com.microsoft.azure.demo.view.persistence.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -35,6 +38,14 @@ public final class SimpleAccountViewDAO extends AbstractDAO implements AccountVi
 
 	@Override
 	public List<AccountBean> getAccounts() {
-		return getJdbcTemplate().queryForList(LIST_QUERY, AccountBean.class, new Object[] {}, new AccountBeanRowMapper());
+		final List<Map<String, Object>> results = getJdbcTemplate().queryForList(LIST_QUERY);
+		final List<AccountBean> accountBeans = new ArrayList<AccountBean>();
+		for (final Map<String, Object> rs : results) {
+			final AccountBean accountBean = new AccountBean();
+			accountBean.setId(UUID.fromString((String) rs.get("ID")));
+			accountBean.setBalance((BigDecimal) rs.get("BALANCE"));
+			accountBeans.add(accountBean);
+		}
+		return accountBeans;
 	}
 }
