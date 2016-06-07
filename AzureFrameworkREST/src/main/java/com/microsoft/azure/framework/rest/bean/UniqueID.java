@@ -1,4 +1,4 @@
-package com.microsoft.azure.framework.rest;
+package com.microsoft.azure.framework.rest.bean;
 
 import java.util.UUID;
 

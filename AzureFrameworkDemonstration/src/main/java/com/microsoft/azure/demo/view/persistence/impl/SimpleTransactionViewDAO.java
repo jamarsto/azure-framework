@@ -10,7 +10,7 @@ import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.microsoft.azure.demo.view.TransactionBean;
+import com.microsoft.azure.demo.view.bean.TransactionBean;
 import com.microsoft.azure.demo.view.persistence.TransactionViewDAO;
 
 @Component

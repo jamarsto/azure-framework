@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.microsoft.azure.demo.view.AccountBean;
+import com.microsoft.azure.demo.view.bean.AccountBean;
 import com.microsoft.azure.demo.view.persistence.AccountViewDAO;
 
 @Component

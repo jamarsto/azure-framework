@@ -1,4 +1,4 @@
-package com.microsoft.azure.demo.view;
+package com.microsoft.azure.demo.view.bean;
 
 import java.math.BigDecimal;
 import java.util.Calendar;

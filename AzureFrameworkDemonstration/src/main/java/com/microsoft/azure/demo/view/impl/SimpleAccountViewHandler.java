@@ -16,10 +16,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.microsoft.azure.demo.view.AccountBean;
 import com.microsoft.azure.demo.view.AccountViewHandler;
-import com.microsoft.azure.demo.view.ResultList;
-import com.microsoft.azure.demo.view.TransactionBean;
+import com.microsoft.azure.demo.view.bean.AccountBean;
+import com.microsoft.azure.demo.view.bean.ResultList;
+import com.microsoft.azure.demo.view.bean.TransactionBean;
 import com.microsoft.azure.demo.view.persistence.AccountViewDAO;
 import com.microsoft.azure.demo.view.persistence.TransactionViewDAO;
 

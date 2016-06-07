@@ -28,8 +28,8 @@ import com.microsoft.azure.framework.domain.service.ConcurrentUpdatePersistenceE
 import com.microsoft.azure.framework.domain.service.DomainServiceException;
 import com.microsoft.azure.framework.precondition.PreconditionException;
 import com.microsoft.azure.framework.rest.CommandHandler;
-import com.microsoft.azure.framework.rest.Error;
-import com.microsoft.azure.framework.rest.UniqueID;
+import com.microsoft.azure.framework.rest.bean.Error;
+import com.microsoft.azure.framework.rest.bean.UniqueID;
 import com.microsoft.azure.framework.rest.service.CommandService;
 
 @Path("/command")
