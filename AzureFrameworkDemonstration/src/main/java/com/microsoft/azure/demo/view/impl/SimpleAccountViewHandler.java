@@ -1,10 +1,8 @@
 package com.microsoft.azure.demo.view.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.NoResultException;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -35,10 +33,8 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final AccountViewDAO accountViewDAO = getBean(servletContext, AccountViewDAO.class);
 			final List<AccountBean> accountBeanList = accountViewDAO.getAccounts();
 			return Response.ok(new ResultListBean(accountBeanList)).build();
-		} catch (final NoResultException e) {
-			return Response.ok(new ResultListBean(new ArrayList<AccountBean>())).build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
 		}
 	}
 
@@ -53,11 +49,12 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final AccountViewDAO accountViewDAO = getBean(servletContext, AccountViewDAO.class);
 			final UUID accountId = UUID.fromString(accountIdString);
 			final AccountBean accountBean = accountViewDAO.getAccount(accountId);
-			return Response.ok(accountBean).build();
-		} catch (final NoResultException e) {
+			if (accountBean != null) {
+				return Response.ok(accountBean).build();
+			}
 			return Response.ok().build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
 		}
 	}
 
@@ -73,10 +70,8 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final UUID accountId = UUID.fromString(accountIdString);
 			final List<TransactionBean> transactionBeanList = transactionViewDAO.getTransactions(accountId);
 			return Response.ok(new ResultListBean(transactionBeanList)).build();
-		} catch (final NoResultException e) {
-			return Response.ok(new ResultListBean(new ArrayList<TransactionBean>())).build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
 		}
 	}
 
@@ -93,11 +88,12 @@ public final class SimpleAccountViewHandler extends AbstractViewHandler implemen
 			final UUID accountId = UUID.fromString(accountIdString);
 			final UUID transactionId = UUID.fromString(transactionIdString);
 			final TransactionBean transactionBean = transactionViewDAO.getTransaction(accountId, transactionId);
-			return Response.ok(transactionBean).build();
-		} catch (final NoResultException e) {
+			if (transactionBean != null) {
+				return Response.ok(transactionBean).build();
+			}
 			return Response.ok().build();
 		} catch (final RuntimeException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new Error(e.getMessage())).build();
 		}
 	}
 }
