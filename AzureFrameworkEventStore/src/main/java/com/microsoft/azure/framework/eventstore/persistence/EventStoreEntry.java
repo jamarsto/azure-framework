@@ -129,8 +129,8 @@ public class EventStoreEntry {
 
 	@Column(name = "BUCKET_ID", updatable = false)
 	private String bucketID;
-	@Column(name = "CHANGE_SET_ID", columnDefinition = "uniqueidentifier", updatable = false)
-	private UUID changeSetID;
+	@Column(name = "CHANGE_SET_ID", updatable = false)
+	private String changeSetID;
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "EVENT_CREATED", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -143,8 +143,8 @@ public class EventStoreEntry {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", columnDefinition = "uniqueidentifier", insertable = false, updatable = false)
 	private UUID id;
-	@Column(name = "STREAM_ID", columnDefinition = "uniqueidentifier", updatable = false)
-	private UUID streamID;
+	@Column(name = "STREAM_ID", updatable = false)
+	private String streamID;
 	@Column(name = "EVENT_VERSION", updatable = false)
 	private Long version;
 
@@ -153,9 +153,9 @@ public class EventStoreEntry {
 
 	private EventStoreEntry(Builder builder) {
 		this.bucketID = builder.bucketID;
-		this.streamID = builder.streamID;
+		this.streamID = builder.streamID.toString();
 		this.version = builder.version;
-		this.changeSetID = builder.changeSetID;
+		this.changeSetID = builder.changeSetID.toString();
 		this.event = builder.event;
 		this.eventClassName = builder.eventClassName;
 	}
@@ -181,7 +181,7 @@ public class EventStoreEntry {
 	}
 
 	public UUID getStreamID() {
-		return streamID;
+		return UUID.fromString(streamID);
 	}
 
 	public Long getVersion() {

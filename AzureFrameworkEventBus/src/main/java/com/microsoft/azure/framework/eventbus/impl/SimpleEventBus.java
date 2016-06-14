@@ -96,7 +96,7 @@ public final class SimpleEventBus implements EventBus {
 			final String eventsString = mapper.writeValueAsString(eventEntries);
 			final BrokeredMessage message = new BrokeredMessage(eventsString);
 			message.setProperty("aggregateClassName", bucketID);
-			message.setProperty("aggregateId", streamID);
+			message.setProperty("aggregateId", streamID.toString());
 			final Long fromVersion = version + 1L;
 			message.setProperty("fromVersion", fromVersion);
 			final Long toVersion = version + eventEntries.size();

@@ -43,20 +43,20 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 		if (filter.getName().equals(Serializable.class.getName())) {
 			final Query query = entityManager.createNamedQuery("EventStoreEntry.versionRange");
 			query.setParameter("bucketID", bucketID)
-					.setParameter("streamID", streamID).setParameter("fromVersion", fromVersion)
+					.setParameter("streamID", streamID.toString()).setParameter("fromVersion", fromVersion)
 					.setParameter("toVersion", toVersion);
 			return Collections.unmodifiableList(query.getResultList());
 		} else {
 			if (fromVersion.equals(Long.MAX_VALUE) && toVersion.equals(Long.MAX_VALUE)) {
 				final Query query = entityManager.createNamedQuery("EventStoreEntry.classNameHighestVersion");
 				query.setParameter("bucketID", bucketID)
-						.setParameter("streamID", streamID).setParameter("eventClassName", filter.getName());
+						.setParameter("streamID", streamID.toString()).setParameter("eventClassName", filter.getName());
 				query.setMaxResults(1);
 				return Collections.unmodifiableList(query.getResultList());
 			} else {
 				final Query query = entityManager.createNamedQuery("EventStoreEntry.classNameAndVersionRange");
 				query.setParameter("bucketID", bucketID)
-						.setParameter("streamID", streamID).setParameter("eventClassName", filter.getName())
+						.setParameter("streamID", streamID.toString()).setParameter("eventClassName", filter.getName())
 						.setParameter("fromVersion", fromVersion).setParameter("toVersion", toVersion);
 				return Collections.unmodifiableList(query.getResultList());
 			}
@@ -76,13 +76,13 @@ public final class SimpleEventStoreDAO implements EventStoreDAO {
 		if (filter.getName().equals(Serializable.class.getName())) {
 			final Query query = entityManager.createNamedQuery("EventStoreEntry.changeSetID");
 			query.setParameter("bucketID", bucketID)
-					.setParameter("streamID", streamID).setParameter("changeSetID", changeSetID);
+					.setParameter("streamID", streamID.toString()).setParameter("changeSetID", changeSetID.toString());
 			return Collections.unmodifiableList(query.getResultList());
 		} else {
 			final Query query = entityManager.createNamedQuery("EventStoreEntry.classNameAndChangeSetID");
 			query.setParameter("bucketID", bucketID)
-					.setParameter("streamID", streamID).setParameter("eventClassName", filter.getName())
-					.setParameter("changeSetID", changeSetID);
+					.setParameter("streamID", streamID.toString()).setParameter("eventClassName", filter.getName())
+					.setParameter("changeSetID", changeSetID.toString());
 			return Collections.unmodifiableList(query.getResultList());
 		}
 	}

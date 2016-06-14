@@ -15,7 +15,7 @@ import com.microsoft.azure.demo.domain.event.impl.CreatedAccount;
 public final class AccountView {
 	@Id
 	@Column(name = "ID", updatable = false)
-	private UUID id;
+	private String id;
 	@Column(name = "BALANCE")
 	private BigDecimal balance;
 
@@ -23,7 +23,7 @@ public final class AccountView {
 	}
 
 	public AccountView(final UUID id, final CreatedAccount event) {
-		this.id = id;
+		this.id = id.toString();
 		this.balance = event.getBalance();
 	}
 
@@ -36,6 +36,6 @@ public final class AccountView {
 	}
 
 	public UUID getId() {
-		return id;
+		return UUID.fromString(id);
 	}
 }

@@ -21,7 +21,7 @@ public final class TransactionView {
 	private static final Character DEPOSIT = 'D';
 	private static final Character WITHDRAWAL = 'W';
 	@Column(name = "AGGREGATE_ID", updatable = false)
-	private UUID aggregateId;
+	private String aggregateId;
 	@Column(name = "AMOUNT", updatable = false)
 	private BigDecimal amount;
 	@Id
@@ -37,7 +37,7 @@ public final class TransactionView {
 	}
 
 	private TransactionView(final UUID aggregateId, final Event event) {
-		this.aggregateId = aggregateId;
+		this.aggregateId = aggregateId.toString();
 		this.createdDateTime = event.getCreatedDateTime();
 	}
 

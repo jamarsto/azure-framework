@@ -99,7 +99,7 @@ public abstract class AbstractViewManager {
 		final Query query = entityManager.createNamedQuery("ViewManager.getVersion");
 		query.setParameter("aggregateName", getAggregateClassName());
 		query.setParameter("viewName", getViewName());
-		query.setParameter("aggregateID", aggregateId);
+		query.setParameter("aggregateID", aggregateId.toString());
 		try {
 			return (ViewVersion) query.getSingleResult();
 		} catch (final NoResultException e) {

@@ -19,8 +19,8 @@ import javax.persistence.Version;
 public final class ViewVersion {
 	@Column(name = "AGGREGATE_NAME", updatable = false)
 	private String aggregateClassName;
-	@Column(name = "AGGREGATE_ID", columnDefinition = "uniqueidentifier", updatable = false)
-	private UUID aggregateId;
+	@Column(name = "AGGREGATE_ID", updatable = false)
+	private String aggregateId;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", columnDefinition = "uniqueidentifier", insertable = false, updatable = false)
@@ -39,7 +39,7 @@ public final class ViewVersion {
 	public ViewVersion(final String aggregateClassName, final String viewName, final UUID aggregateId) {
 		this.aggregateClassName = aggregateClassName;
 		this.viewName = viewName;
-		this.aggregateId = aggregateId;
+		this.aggregateId = aggregateId.toString();
 		this.version = 0L;
 	}
 
@@ -48,7 +48,7 @@ public final class ViewVersion {
 	}
 
 	public UUID getAggregateId() {
-		return aggregateId;
+		return UUID.fromString(aggregateId);
 	}
 
 	public UUID getId() {
