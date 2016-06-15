@@ -23,3 +23,7 @@ This framework uses:
 * Dependency Injection on Aggregate and Command objects
 * JPA
 * REST (JAX-RS) using Jackson FasterXML to enable a single handler for all commands
+
+Example Solution Topology
+
+![alt text](Topology.gif "Example Solution Topology")
