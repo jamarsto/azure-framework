@@ -24,6 +24,6 @@ This framework uses:
 * JPA
 * REST (JAX-RS) using Jackson FasterXML to enable a single handler for all commands
 
-Example Solution Topology
+Below is a diagram showing a highly scalable highly available deployment using the framework.
 
 ![alt text](Topology.gif "Example Solution Topology")
